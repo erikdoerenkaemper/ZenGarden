@@ -1,7 +1,7 @@
 package de.hsos.prog3.projekt.zengarden.model;
 
 public class Pflanze {
-    private Pflanzenart pflanzenart;
+    private final Pflanzenart pflanzenart;
     private Wachstumsphase wachstumsphase;
     private PflanzenEvent aktuellesEvent;
     private PflanzenEvent naechstesPflanzenEvent;
@@ -15,6 +15,23 @@ public class Pflanze {
 
         // Zufällige Zeit zwischen 20 und 80 Sekunden
         zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
+    }
+
+
+    public void pflanzeWirdAngeklickt(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
+        switch (ausgewaehltesWerkzeug){
+            case GIESSKANNE:
+                if (aktuellesEvent == PflanzenEvent.GIESSEN){
+                    giessen();
+                }
+                break;
+            case DUENGER:
+                if (aktuellesEvent == PflanzenEvent.DUENGEN){
+                    duengen();
+                }
+                break;
+            default: break;
+        }
     }
 
 
@@ -100,10 +117,10 @@ public class Pflanze {
         PflanzenEvent zufaelligesPflanzenEvent;
         int zufall = (int) (Math.random() * 100);
 
-        // 50% Giessen, 20% Düngen, 30% Wachstum
-        if (zufall < 50){
+        // 60% Giessen, 20% Düngen, 20% Wachstum
+        if (zufall < 60){
             zufaelligesPflanzenEvent = PflanzenEvent.GIESSEN;
-        } else if (zufall < 70){
+        } else if (zufall < 80){
             zufaelligesPflanzenEvent = PflanzenEvent.DUENGEN;
         } else {
             zufaelligesPflanzenEvent = PflanzenEvent.WACHSTUM;
@@ -133,5 +150,17 @@ public class Pflanze {
 
     public long getZeitpunktDesNaechstenEvents() {
         return zeitpunktDesNaechstenEvents;
+    }
+
+    public int berechneWertDerPflanze(){
+        if (wachstumsphase == Wachstumsphase.KEIMLING){
+            return 100;
+        } else if (wachstumsphase == Wachstumsphase.SAEMLING) {
+            return 150;
+        } else if (wachstumsphase == Wachstumsphase.KLEIN) {
+            return 200;
+        } else {
+            return 300;
+        }
     }
 }

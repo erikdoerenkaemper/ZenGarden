@@ -68,7 +68,9 @@
         android:padding="12dp"
         android:textColor="@android:color/holo_green_dark"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:minWidth="150dp"
+        android:gravity="right"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
