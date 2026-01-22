@@ -106,6 +106,9 @@ public class Pflanze {
                 break;
             default: break;
         }
+        zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
+        naechstesPflanzenEvent = zufaelligesPflanzenEvent();
+        aktuellesEvent = null;
     }
 
 
@@ -147,10 +150,20 @@ public class Pflanze {
         return zufaelligePflanzenart;
     }
 
-
+    // getter
     public long getZeitpunktDesNaechstenEvents() {
         return zeitpunktDesNaechstenEvents;
     }
+    public Pflanzenart getPflanzenart() {
+        return pflanzenart;
+    }
+    public Wachstumsphase getWachstumsphase() {
+        return wachstumsphase;
+    }
+    public PflanzenEvent getAktuellesEvent() {
+        return aktuellesEvent;
+    }
+
 
     public int berechneWertDerPflanze(){
         if (wachstumsphase == Wachstumsphase.KEIMLING){

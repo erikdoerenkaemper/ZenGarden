@@ -1,9 +1,11 @@
 package de.hsos.prog3.projekt.zengarden.view;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import de.hsos.prog3.projekt.zengarden.R;
 import de.hsos.prog3.projekt.zengarden.model.AusgewaehltesWerkzeug;
+import de.hsos.prog3.projekt.zengarden.model.Garten;
+import de.hsos.prog3.projekt.zengarden.model.Pflanze;
 import de.hsos.prog3.projekt.zengarden.viewmodel.GartenViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 LayoutInflater.from(this).inflate(R.layout.topf_mit_pflanze, topfMitPflanze, true);
                 int x = i;
                 int y = j;
+                topfMitPflanze.setTag("x: " + x + " y: " + y);
 
                 // Listener setzen
                 topfMitPflanze.setOnClickListener(v -> {
@@ -50,6 +55,96 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    // UI Elemente anpassen
+    private void gartenDarstellen(Garten garten){
+        GridLayout gartengrid = findViewById(R.id.gartengrid);
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 3; j++) {
+                FrameLayout topfMitPflanze = gartengrid.findViewWithTag("x: " + i + " y: " + j);
+                topfMitPflanzeDartstellen(topfMitPflanze, garten.getPflanze(i,j));
+            }
+        }
+    }
+
+
+
+    private void topfMitPflanzeDartstellen(FrameLayout topfMitPflanze, Pflanze pflanze){
+        ImageView pflanzeImageView = topfMitPflanze.findViewById(R.id.pflanze);
+
+        // Topf leer oder nicht leer
+        if (pflanze == null){
+            pflanzeImageView.setVisibility(View.GONE);
+            return;
+        } else {
+            pflanzeImageView.setVisibility(View.VISIBLE);
+        }
+
+        // Wachstumsphase
+        switch (pflanze.getWachstumsphase()) {
+            case KEIMLING:
+                pflanzeImageView.setScaleX(0.25f);
+                pflanzeImageView.setScaleY(0.25f);
+                break;
+            case SAEMLING:
+                pflanzeImageView.setScaleX(0.4f);
+                pflanzeImageView.setScaleY(0.4f);
+                break;
+            case KLEIN:
+                pflanzeImageView.setScaleX(0.75f);
+                pflanzeImageView.setScaleY(0.75f);
+                break;
+            case AUSGEWACHSEN:
+                pflanzeImageView.setScaleX(1.0f);
+                pflanzeImageView.setScaleY(1.0f);
+
+        }
+
+        // Pflanzenart
+        switch (pflanze.getPflanzenart()){
+            case GAENSEBLUEMCHEN:
+                pflanzeImageView.setImageResource(R.drawable.marigold);
+                break;
+
+            case SONNENBLUME:
+                // pflanzeImageView.setBackgroundResource(R.drawable.tulip);
+                break;
+
+            case ROSE:
+                // pflanzeImageView.setBackgroundResource(R.drawable.rose);
+                break;
+
+        }
+
+
+        // Aktuelles Event
+        switch (pflanze.getAktuellesEvent()){
+            case GIESSEN:
+                break;
+
+            case DUENGEN:
+                break;
+
+            case WACHSTUM:
+                break;
+
+            default:
+                break;
+
+        }
+    }
+
+
+
+
+    private void werkzeugButtonsDarstellen(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
+
+    }
+
+
+
+
 
 
 
@@ -95,17 +190,15 @@ public class MainActivity extends AppCompatActivity {
     // Observables setzen
     private void observablesSetzen(){
         // Geld Anzeige
-        gartenViewModel.getGeld().observe(this, geld -> {
+        gartenViewModel.getGeldLiveData().observe(this, geld -> {
             TextView geldButton = findViewById(R.id.geld_button);
             geldButton.setText(geld + "$");
         });
 
         // Werkzeug Anzeige
-        gartenViewModel.getWerkzeug().observe(this, ausgewaehltesWerkzeug -> {
-            // TODO Werkzeug Anzeige anpassen
-        });
+        gartenViewModel.getWerkzeug().observe(this, this::werkzeugButtonsDarstellen);
 
-
-        // Pflanzen
+        // Garten
+        gartenViewModel.getGartenLiveData().observe(this, this::gartenDarstellen);
     }
 }

@@ -11,10 +11,12 @@ import de.hsos.prog3.projekt.zengarden.model.Garten;
 import de.hsos.prog3.projekt.zengarden.model.Pflanze;
 
 public class GartenViewModel extends ViewModel {
-    private final Garten garten;
+    private Garten garten;
 
-    private final MutableLiveData<Integer> geld = new MutableLiveData<>();
-    private final MutableLiveData<AusgewaehltesWerkzeug> ausgewaehltesWerkzeug = new MutableLiveData<>();
+    private final MutableLiveData<Integer> geldLiveData = new MutableLiveData<>();
+    private final MutableLiveData<AusgewaehltesWerkzeug> ausgewaehltesWerkzeugMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Garten> gartenLiveData = new MutableLiveData<>();
+
 
 
     public GartenViewModel() {
@@ -24,18 +26,24 @@ public class GartenViewModel extends ViewModel {
     }
 
     private void initialisiereViewModel(){
-        geld.setValue(garten.getGeld());
-        ausgewaehltesWerkzeug.setValue(garten.getWerkzeug());
+        geldLiveData.setValue(garten.getGeld());
+        ausgewaehltesWerkzeugMutableLiveData.setValue(garten.getWerkzeug());
+        gartenLiveData.setValue(garten);
     }
 
 
     // Observable getter
-    public LiveData<Integer> getGeld(){
-        return geld;
+    public LiveData<Integer> getGeldLiveData(){
+        return geldLiveData;
     }
     public LiveData<AusgewaehltesWerkzeug> getWerkzeug() {
-        return ausgewaehltesWerkzeug;
+        return ausgewaehltesWerkzeugMutableLiveData;
     }
+    public LiveData<Garten> getGartenLiveData() {
+        return gartenLiveData;
+    }
+
+
 
 
 
@@ -48,8 +56,28 @@ public class GartenViewModel extends ViewModel {
 
     public void topfWirdAngeklickt(int x, int y){
         garten.topfWirdAngeklickt(x,y);
+        gartenKopieren();
     }
 
+
+
+    // Garten bei einer Änderung kopieren, damit LiveData aktiv wird
+    // Die Methode funktionert auch ohne kopieren: Kopieren weg lassen oder drin lassen?
+    private void gartenKopieren(){
+//        Garten gartenKopie = new Garten();
+//        gartenKopie.setWerkzeug(garten.getWerkzeug());
+//        gartenKopie.setGeld(garten.getGeld());
+//
+//        for (int i = 0; i < 6; i++) {
+//            for (int j = 0; j < 3; j++) {
+//                Pflanze pflanze = garten.getPflanze(i, j);
+//                if (pflanze == null) continue;
+//                gartenKopie.setPflanze(i, j, pflanze);
+//            }
+//        }
+//        garten = gartenKopie;
+        gartenLiveData.setValue(garten);
+    }
 
 
     // periodisches Ausführen der Methode allePflanzenPruefen()
@@ -59,7 +87,7 @@ public class GartenViewModel extends ViewModel {
         public void run() {
             allePflanzenPruefen();
             garten.setGeld(garten.getGeld() + 1);
-            geld.setValue(garten.getGeld());
+            geldLiveData.setValue(garten.getGeld());
             handler.postDelayed(this, 1000);
         }
     };

@@ -39,7 +39,9 @@ public class Garten {
     public Pflanze getPflanze(int x, int y){
         return pflanzen[x][y];
     }
-
+    public void setPflanze(int x, int y, Pflanze pflanze){
+        this.pflanzen[x][y] = pflanze;
+    }
     public int getGeld() {
         return geld;
     }

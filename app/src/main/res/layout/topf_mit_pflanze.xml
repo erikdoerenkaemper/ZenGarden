@@ -9,13 +9,15 @@
         android:id="@+id/topf"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/ic_launcher_background" />
+        android:src="@drawable/blumentopf" />
 
     <!-- Pflanze -->
     <ImageView
         android:id="@+id/pflanze"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/ic_launcher_foreground" />
+        android:src="@drawable/marigold"
+        android:visibility="visible"
+        />
 
 </FrameLayout>
