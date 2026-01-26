@@ -36,6 +36,7 @@ public class Pflanze {
 
 
     public void triggerEvent(){
+        zeitpunktDesNaechstenEvents = 0;
         switch (naechstesPflanzenEvent) {
             case GIESSEN:
                 willWasser();
@@ -95,19 +96,21 @@ public class Pflanze {
         switch (wachstumsphase){
             case KEIMLING:
                 zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
+                naechstesPflanzenEvent = zufaelligesPflanzenEvent();
                 wachstumsphase = Wachstumsphase.SAEMLING;
                 break;
             case SAEMLING:
                 zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
+                naechstesPflanzenEvent = zufaelligesPflanzenEvent();
                 wachstumsphase = Wachstumsphase.KLEIN;
                 break;
             case KLEIN:
                 wachstumsphase = Wachstumsphase.AUSGEWACHSEN;
+                naechstesPflanzenEvent = null;
+                zeitpunktDesNaechstenEvents = 0;
                 break;
             default: break;
         }
-        zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
-        naechstesPflanzenEvent = zufaelligesPflanzenEvent();
         aktuellesEvent = null;
     }
 

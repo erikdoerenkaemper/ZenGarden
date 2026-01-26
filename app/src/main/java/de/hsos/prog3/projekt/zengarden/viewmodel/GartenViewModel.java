@@ -11,7 +11,7 @@ import de.hsos.prog3.projekt.zengarden.model.Garten;
 import de.hsos.prog3.projekt.zengarden.model.Pflanze;
 
 public class GartenViewModel extends ViewModel {
-    private Garten garten;
+    private final Garten garten;
 
     private final MutableLiveData<Integer> geldLiveData = new MutableLiveData<>();
     private final MutableLiveData<AusgewaehltesWerkzeug> ausgewaehltesWerkzeugMutableLiveData = new MutableLiveData<>();
@@ -33,9 +33,6 @@ public class GartenViewModel extends ViewModel {
 
 
     // Observable getter
-    public LiveData<Integer> getGeldLiveData(){
-        return geldLiveData;
-    }
     public LiveData<AusgewaehltesWerkzeug> getWerkzeug() {
         return ausgewaehltesWerkzeugMutableLiveData;
     }
@@ -56,26 +53,14 @@ public class GartenViewModel extends ViewModel {
 
     public void topfWirdAngeklickt(int x, int y){
         garten.topfWirdAngeklickt(x,y);
-        gartenKopieren();
+        gartenAktuaisieren();
     }
 
 
 
     // Garten bei einer Änderung kopieren, damit LiveData aktiv wird
     // Die Methode funktionert auch ohne kopieren: Kopieren weg lassen oder drin lassen?
-    private void gartenKopieren(){
-//        Garten gartenKopie = new Garten();
-//        gartenKopie.setWerkzeug(garten.getWerkzeug());
-//        gartenKopie.setGeld(garten.getGeld());
-//
-//        for (int i = 0; i < 6; i++) {
-//            for (int j = 0; j < 3; j++) {
-//                Pflanze pflanze = garten.getPflanze(i, j);
-//                if (pflanze == null) continue;
-//                gartenKopie.setPflanze(i, j, pflanze);
-//            }
-//        }
-//        garten = gartenKopie;
+    private void gartenAktuaisieren(){
         gartenLiveData.setValue(garten);
     }
 
@@ -94,15 +79,21 @@ public class GartenViewModel extends ViewModel {
 
     private void allePflanzenPruefen(){
         long aktuelleZeit = System.currentTimeMillis();
-
+        boolean eventWurdeGetriggert = false;
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 3; j++) {
                 Pflanze pflanze = garten.getPflanze(i, j);
                 if (pflanze == null) continue;
-                if (pflanze.getZeitpunktDesNaechstenEvents() < aktuelleZeit) {
+
+                // zeitpunktDesNaechstenEvents = 0 zeigt an, dass nicht mehr getriggert werden muss
+                if (pflanze.getZeitpunktDesNaechstenEvents() < aktuelleZeit && pflanze.getZeitpunktDesNaechstenEvents() != 0) {
                     pflanze.triggerEvent();
+                    eventWurdeGetriggert = true;
                 }
             }
+        }
+        if (eventWurdeGetriggert) {
+            gartenAktuaisieren();
         }
     }
 }

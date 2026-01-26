@@ -15,6 +15,7 @@ import de.hsos.prog3.projekt.zengarden.R;
 import de.hsos.prog3.projekt.zengarden.model.AusgewaehltesWerkzeug;
 import de.hsos.prog3.projekt.zengarden.model.Garten;
 import de.hsos.prog3.projekt.zengarden.model.Pflanze;
+import de.hsos.prog3.projekt.zengarden.model.PflanzenEvent;
 import de.hsos.prog3.projekt.zengarden.viewmodel.GartenViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
                 topfMitPflanzeDartstellen(topfMitPflanze, garten.getPflanze(i,j));
             }
         }
+
+        // Geld anzeige
+        TextView geldButton = findViewById(R.id.geld_button);
+        geldButton.setText(garten.getGeld() + "$");
     }
 
 
@@ -81,11 +86,30 @@ public class MainActivity extends AppCompatActivity {
             pflanzeImageView.setVisibility(View.VISIBLE);
         }
 
+
+        // Pflanzenart
+        switch (pflanze.getPflanzenart()){
+            case GAENSEBLUEMCHEN:
+                pflanzeImageView.setImageResource(R.drawable.marigold);
+                break;
+
+            case SONNENBLUME:
+                // pflanzeImageView.setBackgroundResource(R.drawable.tulip);
+                break;
+
+            case ROSE:
+                // pflanzeImageView.setBackgroundResource(R.drawable.rose);
+                break;
+        }
+
+
+
         // Wachstumsphase
         switch (pflanze.getWachstumsphase()) {
             case KEIMLING:
                 pflanzeImageView.setScaleX(0.25f);
                 pflanzeImageView.setScaleY(0.25f);
+                //pflanzeImageView.setImageResource(R.drawable.keimling);
                 break;
             case SAEMLING:
                 pflanzeImageView.setScaleX(0.4f);
@@ -101,37 +125,26 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        // Pflanzenart
-        switch (pflanze.getPflanzenart()){
-            case GAENSEBLUEMCHEN:
-                pflanzeImageView.setImageResource(R.drawable.marigold);
-                break;
-
-            case SONNENBLUME:
-                // pflanzeImageView.setBackgroundResource(R.drawable.tulip);
-                break;
-
-            case ROSE:
-                // pflanzeImageView.setBackgroundResource(R.drawable.rose);
-                break;
-
-        }
-
 
         // Aktuelles Event
-        switch (pflanze.getAktuellesEvent()){
-            case GIESSEN:
-                break;
+        ImageView beduerfnissImageView = topfMitPflanze.findViewById(R.id.beduerfniss);
+        PflanzenEvent aktuellesEvent = pflanze.getAktuellesEvent();
+        if (aktuellesEvent == null) {
+            beduerfnissImageView.setVisibility(View.GONE);
+        } else {
+            switch (aktuellesEvent) {
+                case GIESSEN:
+                    beduerfnissImageView.setImageResource(R.drawable.wassertropfen);
+                    beduerfnissImageView.setVisibility(View.VISIBLE);
+                    break;
 
-            case DUENGEN:
-                break;
+                case DUENGEN:
+                    break;
 
-            case WACHSTUM:
-                break;
-
-            default:
-                break;
-
+                default:
+                    beduerfnissImageView.setVisibility(View.GONE);
+                    break;
+            }
         }
     }
 
@@ -189,12 +202,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Observables setzen
     private void observablesSetzen(){
-        // Geld Anzeige
-        gartenViewModel.getGeldLiveData().observe(this, geld -> {
-            TextView geldButton = findViewById(R.id.geld_button);
-            geldButton.setText(geld + "$");
-        });
-
         // Werkzeug Anzeige
         gartenViewModel.getWerkzeug().observe(this, this::werkzeugButtonsDarstellen);
 

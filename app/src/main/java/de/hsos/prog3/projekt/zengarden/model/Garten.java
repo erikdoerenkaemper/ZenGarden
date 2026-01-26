@@ -1,7 +1,7 @@
 package de.hsos.prog3.projekt.zengarden.model;
 
 public class Garten {
-    int geld = 100;
+    int geld = 10000;
     Pflanze[][] pflanzen = new Pflanze[6][3];
     AusgewaehltesWerkzeug ausgewaehltesWerkzeug = AusgewaehltesWerkzeug.NICHTS;
 
