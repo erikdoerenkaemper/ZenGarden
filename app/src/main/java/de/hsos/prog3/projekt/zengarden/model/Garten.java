@@ -1,18 +1,39 @@
 package de.hsos.prog3.projekt.zengarden.model;
 
+/**
+ * Model des ZenGarden.
+ * @author Erik Dörenkämper
+ */
 public class Garten {
+    /**
+     * Geld des Spielers.
+     */
     int geld = 10000;
+
+    /**
+     * Array welches die Pflanzen des Gartens hält.
+     */
     Pflanze[][] pflanzen = new Pflanze[6][3];
+
+    /**
+     * Das zur Laufzeit aktuell ausgewählte Werkzeug.
+     */
     AusgewaehltesWerkzeug ausgewaehltesWerkzeug = AusgewaehltesWerkzeug.NICHTS;
 
+
+    /**
+     * Führt eine passende Methode auf dem angeklickten Topf aus.
+     * @param x Spalte in der sich die Pflanze im Garten befindet.
+     * @param y Zeile in der sich die Pflanze im Garten befindet.
+     * @author Erik Dörenkämper
+     */
     public void topfWirdAngeklickt(int x, int y){
         Pflanze pflanze = pflanzen[x][y];
 
         // Wenn Topf nicht leer ist
         if (pflanze != null){
             if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERKAUFEN){
-                geld += pflanze.berechneWertDerPflanze();
-                pflanzen[x][y] = null;
+                pflanzeVerkaufen(x,y);
             } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERSCHIEBEN) {
                 // TODO Verschieben hinzufügen
             } else {
@@ -26,12 +47,29 @@ public class Garten {
     }
 
 
-
+    /**
+     * Pflanzt bei ausreichendem Geld eine neue Pflanze im ausgewählten Topf.
+     * @param x Spalte in der sich die Pflanze im Garten befindet.
+     * @param y Zeile in der sich die Pflanze im Garten befindet.
+     * @author Erik Dörenkämper
+     */
     private void neuePflanzeKaufen(int x,int y){
         if (geld > 100) {
             pflanzen[x][y] = new Pflanze();
             geld -= 100;
         }
+    }
+
+
+    /**
+     * Entfernt die Pflanze auf dem ausgewählten Topf und erhöht das Geld um den Wert der Pflanze.
+     * @param x Spalte in der sich die Pflanze im Garten befindet.
+     * @param y Zeile in der sich die Pflanze im Garten befindet.
+     * @author Erik Dörenkämper
+     */
+    private void pflanzeVerkaufen(int x,int y){
+        geld += pflanzen[x][y].berechneWertDerPflanze();
+        pflanzen[x][y]  = null;
     }
 
 

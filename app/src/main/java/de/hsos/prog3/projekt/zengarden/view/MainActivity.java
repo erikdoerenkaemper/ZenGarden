@@ -20,6 +20,9 @@ import de.hsos.prog3.projekt.zengarden.viewmodel.GartenViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * ViewModel des Gartens.
+     */
     private GartenViewModel gartenViewModel;
 
     @Override
@@ -36,8 +39,11 @@ public class MainActivity extends AppCompatActivity {
         observablesSetzen();
     }
 
+    /**
+     * Initialisiert die Views der App.
+     * @author Erik Dörenkämper
+     */
     private void initialisiereViews(){
-
         GridLayout gartengrid = findViewById(R.id.gartengrid);
 
         for (int i = 0; i < 6; i++) {
@@ -153,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void werkzeugButtonsDarstellen(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
-
+        //TODO
     }
 
 
@@ -164,6 +170,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Button Listeners setzen
+
+    /**
+     * Setzt die Listener für die Werkzeugbuttons.
+     * Listeners für die topfMitPflanzen Views werden bereits bei der Erstellung der Pflanzen hinzugefügt
+     * @author Erik Dörenkämper
+     */
     private void buttonListenersSetzen() {
 
         // Listeners für die Werkzeugbuttons
@@ -192,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.VERKAUFEN);
         });
 
-        // Listeners für die Töpfe_mit_Pflanzen werden bereits bei der Erstellung der Pflanzen hinzugefügt
+        // Listeners für die topfMitPflanzen Views werden bereits bei der Erstellung der Pflanzen hinzugefügt
     }
 
 
@@ -202,6 +214,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Observables setzen
+
+    /**
+     * Setzt die Observables für das ViewModel.
+     * @author Erik Dörenkämper
+     */
     private void observablesSetzen(){
         // Werkzeug Anzeige
         gartenViewModel.getWerkzeug().observe(this, this::werkzeugButtonsDarstellen);

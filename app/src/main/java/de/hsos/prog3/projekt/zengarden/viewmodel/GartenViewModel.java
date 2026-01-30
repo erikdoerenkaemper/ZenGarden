@@ -13,19 +13,50 @@ import de.hsos.prog3.projekt.zengarden.model.AusgewaehltesWerkzeug;
 import de.hsos.prog3.projekt.zengarden.model.Garten;
 import de.hsos.prog3.projekt.zengarden.model.Pflanze;
 
+/**
+ * ViewModel des ZenGarden.
+ * @author Erik Dörenkämper
+ */
 public class GartenViewModel extends ViewModel {
+    /**
+     * Model des Gartens.
+     */
     private Garten garten;
-    SharedPreferences sharedPreferences;
-
+    /**
+     * SharedPreference Objekt für die Persistierung des Gartens.
+     */
+    SharedPreferences gartenSharedPreferences;
+    /**
+     * Handler für periodisches Prüfen aller Pflanzen auf Events.
+     */
+    Handler handler = new Handler(Looper.getMainLooper());
+    /**
+     * LiveData für das Geld
+     */
     private final MutableLiveData<Integer> geldLiveData = new MutableLiveData<>();
+    /**
+     * LiveData für das zur Laufzeit aktuell ausgewählte Werkzeug.
+     */
     private final MutableLiveData<AusgewaehltesWerkzeug> ausgewaehltesWerkzeugMutableLiveData = new MutableLiveData<>();
+    /**
+     * LiveData für den gesamten Garten.
+     */
     private final MutableLiveData<Garten> gartenLiveData = new MutableLiveData<>();
 
 
+    /**
+     * <p>Initialisiert das ViewModel.<br>
+     * 1. Gartenobjekt wird geladen.<br>
+     * 2. Handler für das periodische Prüfen aller Pflanzen auf Events wird gestartet.<br>
+     * 3. LiveDatas werden gesetzt.</p>
+     *
+     * @author Erik Dörenkämper
+     * @param sharedPreferences SharedPreference Objekt für die Persistierung des Gartens.
+     */
     public void initialisiereViewModel(SharedPreferences sharedPreferences){
         // garten laden
-        this.sharedPreferences = sharedPreferences;
-        garten = gartenLaden(this.sharedPreferences);
+        this.gartenSharedPreferences = sharedPreferences;
+        garten = gartenLaden(this.gartenSharedPreferences);
 
         // Handler für periodisches Ausführen der Methode allePflanzenpruefen()
         handler.post(runnableAllePflanzenpruefen);
@@ -38,41 +69,64 @@ public class GartenViewModel extends ViewModel {
 
 
     // Observable getter
+    /**
+     * @author Erik Dörenkämper
+     * @return LiveData für das zur Laufzeit aktuell ausgewählte Werkzeug.
+     */
     public LiveData<AusgewaehltesWerkzeug> getWerkzeug() {
         return ausgewaehltesWerkzeugMutableLiveData;
     }
+
+    /**
+     * @author Erik Dörenkämper
+     * @return LiveData für den gesamten Garten.
+     */
     public LiveData<Garten> getGartenLiveData() {
         return gartenLiveData;
     }
 
 
 
-
-
-
-
     // Deligierungen ans Model
+    /**
+     * Leitet den Klick auf eines der Werkzeuge an as Model weiter.
+     * @author Erik Dörenkämper
+     * @param ausgewaehltesWerkzeug Werkzeug das angeklickt wurde.
+     */
     public void setWerkzeug(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         garten.setWerkzeug(ausgewaehltesWerkzeug);
     }
 
+
+    /**
+     * Leitet den Klick auf einen Topf an das Model weiter. Außerdem wird hier der Garten gespeichert.
+     * @param x Spalte in der sich die Pflanze im Garten befindet.
+     * @param y Zeile in der sich die Pflanze im Garten befindet.
+     * @author Erik Dörenkämper
+     */
     public void topfWirdAngeklickt(int x, int y){
         garten.topfWirdAngeklickt(x,y);
-        gartenAktuaisieren();
-        gartenSpeichern(sharedPreferences); // bei jeder Änderung des Gartens wird gespeichert
+        gartenAktualisieren();
+        gartenSpeichern(gartenSharedPreferences); // bei jeder Änderung des Gartens wird gespeichert
     }
 
 
 
-    // Garten bei einer Änderung kopieren, damit LiveData aktiv wird
-    // Die Methode funktionert auch ohne kopieren: Kopieren weg lassen oder drin lassen?
-    private void gartenAktuaisieren(){
+    // Garten erneut ins LiveData setzen, damit LiveData aktiv wird
+    /**
+     * Setzt erneut den Garten in das LiveData Objekt, damit LiveData aktiv wird.
+     * @author Erik Dörenkämper
+     */
+    private void gartenAktualisieren(){
         gartenLiveData.setValue(garten);
     }
 
 
+
     // periodisches Ausführen der Methode allePflanzenPruefen()
-    Handler handler = new Handler(Looper.getMainLooper());
+    /**
+     * Runnable für das periodische Ausführen der Methode allePflanzenPruefen().
+     */
     Runnable runnableAllePflanzenpruefen = new Runnable() {
         @Override
         public void run() {
@@ -83,6 +137,13 @@ public class GartenViewModel extends ViewModel {
         }
     };
 
+    /**
+     * Überprüft alle Pflanzen im Garten auf Events.
+     * Dazu wird die aktuelle Zeit mit dem Zeitpunkt des nächsten Events der Pflanze verglichen.
+     * Wenn der Zeitpunkt des nächsten Events in der Vergangenheit liegt, wird das Event getriggert.
+     * Wenn ein Event getriggert wurde, wird das LiveData Objekt des Gartens aktualisiert.
+     * @author Erik Dörenkämper
+     */
     private void allePflanzenPruefen(){
         long aktuelleZeit = System.currentTimeMillis();
         boolean eventWurdeGetriggert = false;
@@ -99,13 +160,19 @@ public class GartenViewModel extends ViewModel {
             }
         }
         if (eventWurdeGetriggert) {
-            gartenAktuaisieren();
+            gartenAktualisieren();
         }
     }
 
 
 
     // Speichern und Laden des Gartens
+    /**
+     * Laden des Gartens aus dem SharedPreferences.
+     * @param sharedPreferences SharedPreference Objekt für den Garten.
+     * @return Garten
+     * @author Erik Dörenkämper
+     */
     public Garten gartenLaden(SharedPreferences sharedPreferences){
         String json = sharedPreferences.getString("garten", null);
 
@@ -118,6 +185,11 @@ public class GartenViewModel extends ViewModel {
 
     }
 
+    /**
+     * Speichern des Gartens in die SharedPreferences.
+     * @param sharedPreferences SharedPreference Objekt für den Garten.
+     * @author Erik Dörenkämper
+     */
     public void gartenSpeichern(SharedPreferences sharedPreferences) {
         Gson gson = new Gson();
         String json = gson.toJson(garten);
