@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         gartenViewModel = new ViewModelProvider(this).get(GartenViewModel.class);
 
+        gartenViewModel.initialisiereViewModel(getSharedPreferences("garten", MODE_PRIVATE));
         initialisiereViews();
         buttonListenersSetzen();
         observablesSetzen();
