@@ -131,8 +131,6 @@ public class GartenViewModel extends ViewModel {
         @Override
         public void run() {
             allePflanzenPruefen();
-            garten.setGeld(garten.getGeld() + 1);
-            geldLiveData.setValue(garten.getGeld());
             handler.postDelayed(this, 1000);
         }
     };

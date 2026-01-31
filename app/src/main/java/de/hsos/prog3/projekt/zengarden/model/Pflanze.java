@@ -1,5 +1,9 @@
 package de.hsos.prog3.projekt.zengarden.model;
 
+/**
+ * Model für eine Pflanze.
+ * @author Erik Dörenkämper
+ */
 public class Pflanze {
     private final Pflanzenart pflanzenart;
     private Wachstumsphase wachstumsphase;
@@ -7,6 +11,9 @@ public class Pflanze {
     private PflanzenEvent naechstesPflanzenEvent;
     private long zeitpunktDesNaechstenEvents;
 
+    /**
+     * Konstruktor für eine Pflanze.
+     */
     public Pflanze(){
         pflanzenart = zufaelligePflanzenart();
         wachstumsphase = Wachstumsphase.KEIMLING;
@@ -17,7 +24,11 @@ public class Pflanze {
         zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
     }
 
-
+    /**
+     * Führt eine passende Methode auf der angeklickten Pflanze aus.
+     * @param ausgewaehltesWerkzeug Beim Anklicken ausgewähltes Werkzeug.
+     * @author Erik Dörenkämper
+     */
     public void pflanzeWirdAngeklickt(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         switch (ausgewaehltesWerkzeug){
             case GIESSKANNE:
@@ -34,15 +45,17 @@ public class Pflanze {
         }
     }
 
-
+    /**
+     * Triggert die passende Methode für das aktuelle Event.
+     * @author Erik Dörenkämper
+     */
     public void triggerEvent(){
         zeitpunktDesNaechstenEvents = 0;
         switch (naechstesPflanzenEvent) {
+            // Bei GIESSEN und DUENGEN muss jeweils nur zum naechsten Event gewechselt werden
             case GIESSEN:
-                willWasser();
-                break;
             case DUENGEN:
-                willDuenger();
+                aktuellesEvent = naechstesPflanzenEvent;
                 break;
             case WACHSTUM:
                 wachsen();
@@ -51,31 +64,11 @@ public class Pflanze {
     }
 
 
-    private void willWasser(){
-        aktuellesEvent = naechstesPflanzenEvent;
-
-
-    }
-
-
-    private void willDuenger(){
-        aktuellesEvent = naechstesPflanzenEvent;
-
-
-
-
-    }
-
-
-
+    // giessen und duengen könnte man als beduerfnissErfüllen() zusammenfassen
     private void giessen() {
         zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
         naechstesPflanzenEvent = zufaelligesPflanzenEvent();
         aktuellesEvent = null;
-
-
-
-
 
 
     }
@@ -86,12 +79,15 @@ public class Pflanze {
         aktuellesEvent = null;
 
 
-
-
     }
 
 
 
+    /**
+     * Erhöht die Wachstumsphase der Pflanze und setzt ein neues Event und neuen Zeitpunkt für das nächste Event.
+     * Beim Erreichen der höchsten Stufe wird kein neues Event gesetzt.
+     * @author Erik Dörenkämper
+     */
     private void wachsen(){
         switch (wachstumsphase){
             case KEIMLING:
@@ -115,10 +111,24 @@ public class Pflanze {
     }
 
 
+    /**
+     * Generiert eine zufällige Wartezeit zwischen 20 und 80 Sekunden.
+     * @return Generierte Wartezeit
+     * @author Erik Dörenkämper
+     */
     private long zufaelligeWartezeit() {
         return System.currentTimeMillis() + 1000 * 20 + 1000 *  (long)(Math.random() * 60);
     }
 
+
+    /**
+     * <p>Generiert mit unterschiedlichen Wahrscheinlichkeiten ein zufälliges Event.<br>
+     * Gießen -> 60%<br>
+     * Düngen -> 20%<br>
+     * Wachstum -> 20%</p>
+     * @return Generiertes Event
+     * @author Erik Dörenkämper
+     */
     private PflanzenEvent zufaelligesPflanzenEvent() {
         PflanzenEvent zufaelligesPflanzenEvent;
         int zufall = (int) (Math.random() * 100);
@@ -136,7 +146,14 @@ public class Pflanze {
     }
 
 
-
+    /**
+     * <p>Generiert mit unterschiedlichen Wahrscheinlichkeiten eine zufällige Pflanzenart.<br>
+     * Sonnenblume -> 50%<br>
+     * Gänseblümchen -> 40%<br>
+     * Rose -> 10%</p>
+     * @return Generierte Pflanzenart
+     * @author Erik Dörenkämper
+     */
     private Pflanzenart zufaelligePflanzenart(){
         Pflanzenart zufaelligePflanzenart;
         int zufall = (int) (Math.random() * 100);
@@ -154,20 +171,48 @@ public class Pflanze {
     }
 
     // getter
+
+    /**
+     * Getter für die Zeitpunkt des nächsten Events.
+     * @return Zeitpunkt des nächsten Events
+     * @author Erik Dörenkämper
+     */
     public long getZeitpunktDesNaechstenEvents() {
         return zeitpunktDesNaechstenEvents;
     }
+
+    /**
+     * Getter für die Pflanzenart.
+     * @return Pflanzenart
+     * @author Erik Dörenkämper
+     */
     public Pflanzenart getPflanzenart() {
         return pflanzenart;
     }
+
+    /**
+     * Getter für die Wachstumsphase.
+     * @return Wachstumsphase
+     * @author Erik Dörenkämper
+     */
     public Wachstumsphase getWachstumsphase() {
         return wachstumsphase;
     }
+
+    /**
+     * Getter für das aktuelle Event.
+     * @return Aktuelles Event
+     * @author Erik Dörenkämper
+     */
     public PflanzenEvent getAktuellesEvent() {
         return aktuellesEvent;
     }
 
 
+    /**
+     * Berechnet den Wert der Pflanze anhand der Wachstumsstufe.
+     * @return Wert der Pflanze
+     */
     public int berechneWertDerPflanze(){
         if (wachstumsphase == Wachstumsphase.KEIMLING){
             return 100;

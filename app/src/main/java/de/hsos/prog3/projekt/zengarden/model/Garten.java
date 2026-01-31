@@ -74,21 +74,69 @@ public class Garten {
 
 
     // getter und setter
+    /**
+     * Getter für eine Pflanze im Garten.
+     * @param x Spalte in der sich die Pflanze im Garten befindet.
+     * @param y Zeile in der sich die Pflanze im Garten befindet.
+     * @return Pflanze an der Position x und y
+     * @author Erik Dörenkämper
+     */
     public Pflanze getPflanze(int x, int y){
         return pflanzen[x][y];
     }
+
+    /**
+     * Setter für eine Pflanze im Garten.
+     * @param x Spalte in der sich die Pflanze im Garten befindet.
+     * @param y Zeile in der sich die Pflanze im Garten befindet.
+     * @param pflanze Pflanze die gesetzt werden soll.
+     * @author Erik Dörenkämper
+     */
     public void setPflanze(int x, int y, Pflanze pflanze){
         this.pflanzen[x][y] = pflanze;
     }
+
+    /**
+     * Getter für das Geld des Spielers.
+     * @return Geld des Spielers.
+     * @author Erik Dörenkämper
+     */
     public int getGeld() {
         return geld;
     }
+
+    /**
+     * Setter für das Geld des Spielers.
+     * @param geld Neuer Geldwert.
+     * @author Erik Dörenkämper
+     */
     public void setGeld(int geld) {
         this.geld = geld;
     }
+
+    /**
+     * Geld des Spielers wird um den übergebenen Betrag verändert.
+     * @param geld Betrag um den das Geld verändert werden soll.
+     * -@author Erik Dörenkämper
+     */
+    public void bucheGeld(int geld){
+        this.geld += geld;
+    }
+
+    /**
+     * Getter für das zur Laufzeit aktuell ausgewählte Werkzeug.
+     * @return Das zur Laufzeit aktuell ausgewählte Werkzeug.
+     * @author Erik Dörenkämper
+     */
     public AusgewaehltesWerkzeug getWerkzeug() {
         return ausgewaehltesWerkzeug;
     }
+
+    /**
+     * Setter für das zur Laufzeit aktuell ausgewählte Werkzeug.
+     * @param ausgewaehltesWerkzeug Das neue zur Laufzeit aktuell ausgewählte Werkzeug.
+     * @author Erik Dörenkämper
+     */
     public void setWerkzeug(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         this.ausgewaehltesWerkzeug = ausgewaehltesWerkzeug;
     }

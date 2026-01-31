@@ -18,6 +18,9 @@ import de.hsos.prog3.projekt.zengarden.model.Pflanze;
 import de.hsos.prog3.projekt.zengarden.model.PflanzenEvent;
 import de.hsos.prog3.projekt.zengarden.viewmodel.GartenViewModel;
 
+/**
+ * Activity des ZenGarden.
+ */
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -34,38 +37,54 @@ public class MainActivity extends AppCompatActivity {
         gartenViewModel = new ViewModelProvider(this).get(GartenViewModel.class);
 
         gartenViewModel.initialisiereViewModel(getSharedPreferences("garten", MODE_PRIVATE));
-        initialisiereViews();
+        initialisiereGrid();
         buttonListenersSetzen();
         observablesSetzen();
     }
 
     /**
-     * Initialisiert die Views der App.
+     * Befüllt das Grid mit topfMitPflanze Layouts.
      * @author Erik Dörenkämper
      */
-    private void initialisiereViews(){
+    private void initialisiereGrid(){
         GridLayout gartengrid = findViewById(R.id.gartengrid);
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 3; j++) {
-                FrameLayout topfMitPflanze = new FrameLayout(this);
-                LayoutInflater.from(this).inflate(R.layout.topf_mit_pflanze, topfMitPflanze, true);
-                int x = i;
-                int y = j;
-                topfMitPflanze.setTag("x: " + x + " y: " + y);
-
-                // Listener setzen
-                topfMitPflanze.setOnClickListener(v -> {
-                    gartenViewModel.topfWirdAngeklickt(x,y);
-                });
-
+                FrameLayout topfMitPflanze = topfMitPflanzeLayoutErstellen(i,j);
                 gartengrid.addView(topfMitPflanze);
             }
         }
     }
 
+    /**
+     * Erstellt ein topfMitPflanze FrameLayout und setzt einen OnClickListener.
+     * @param x Spalte in der sich die Pflanze im Garten befindet.
+     * @param y Zeile in der sich die Pflanze im Garten befindet.
+     * @return Fertiges topfMitPflanze FrameLayout.
+     * @author Erik Dörenkämper
+     */
+    private FrameLayout topfMitPflanzeLayoutErstellen(int x, int y){
+        FrameLayout topfMitPflanze = new FrameLayout(this);
+        LayoutInflater.from(this).inflate(R.layout.topf_mit_pflanze, topfMitPflanze, true);
+        topfMitPflanze.setTag("x: " + x + " y: " + y);
+
+        // Listener setzen
+        topfMitPflanze.setOnClickListener(v -> {
+            gartenViewModel.topfWirdAngeklickt(x,y);
+        });
+
+        return topfMitPflanze;
+    }
+
+
 
     // UI Elemente anpassen
+    /**
+     * Durchläuft alle Views und passt diese anhand des Models an.
+     * @param garten Model des Gartens
+     * @author Erik Dörenkämper
+     */
     private void gartenDarstellen(Garten garten){
         GridLayout gartengrid = findViewById(R.id.gartengrid);
         for (int i = 0; i < 6; i++) {
@@ -81,7 +100,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Passt die Views in topfMitPflanze anhand des Models an.
+     * @param topfMitPflanze FrameLayout, das die Views des Topfes, der Pflanze und der Bedüfnisse enthält.
+     * @param pflanze Model der Pflanze.
+     * @author Erik Dörenkämper
+     */
     private void topfMitPflanzeDartstellen(FrameLayout topfMitPflanze, Pflanze pflanze){
         ImageView pflanzeImageView = topfMitPflanze.findViewById(R.id.pflanze);
 
@@ -156,8 +180,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
+    /**
+     * Stellt die Werkzeug Buttons dar.
+     * Der Button mit dem aktuell ausgewählten Werkzeug wird hervorgehoben.
+     * @param ausgewaehltesWerkzeug Werkzeug das aktuell ausgewählt wurde.
+     * @author -
+     */
     private void werkzeugButtonsDarstellen(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         //TODO
     }
@@ -172,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     // Button Listeners setzen
 
     /**
-     * Setzt die Listener für die Werkzeugbuttons.
+     * Setzt die OnClickListener für die Werkzeugbuttons.
      * Listeners für die topfMitPflanzen Views werden bereits bei der Erstellung der Pflanzen hinzugefügt
      * @author Erik Dörenkämper
      */
