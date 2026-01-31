@@ -117,7 +117,7 @@ public class Garten {
     /**
      * Geld des Spielers wird um den übergebenen Betrag verändert.
      * @param geld Betrag um den das Geld verändert werden soll.
-     * -@author Erik Dörenkämper
+     * @author Erik Dörenkämper
      */
     public void bucheGeld(int geld){
         this.geld += geld;

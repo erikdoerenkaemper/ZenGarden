@@ -71,9 +71,7 @@ public class MainActivity extends AppCompatActivity {
         topfMitPflanze.setTag("x: " + x + " y: " + y);
 
         // Listener setzen
-        topfMitPflanze.setOnClickListener(v -> {
-            gartenViewModel.topfWirdAngeklickt(x,y);
-        });
+        topfMitPflanze.setOnClickListener(v -> gartenViewModel.topfWirdAngeklickt(x,y));
 
         return topfMitPflanze;
     }
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Geld anzeige
         TextView geldButton = findViewById(R.id.geld_button);
-        geldButton.setText(garten.getGeld() + "$");
+        geldButton.setText(getString(R.string.dollar, garten.getGeld()));
     }
 
 
@@ -127,10 +125,12 @@ public class MainActivity extends AppCompatActivity {
 
             case SONNENBLUME:
                 // pflanzeImageView.setBackgroundResource(R.drawable.tulip);
+                //TODO Sonnenblumen icon muss noch gezeichnet werden
                 break;
 
             case ROSE:
                 // pflanzeImageView.setBackgroundResource(R.drawable.rose);
+                //TODO Rose icon muss noch gezeichnet werden
                 break;
         }
 
@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case DUENGEN:
+                    //TODO Dünger icon muss noch gezeichnet werden
                     break;
 
                 default:
@@ -200,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
      * @author -
      */
     private void werkzeugButtonsDarstellen(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
-        //TODO
+        //TODO werkzeug buttons richtig darstellen
     }
 
 
@@ -221,29 +222,19 @@ public class MainActivity extends AppCompatActivity {
 
         // Listeners für die Werkzeugbuttons
         Button wasserButton = findViewById(R.id.wasser_button);
-        wasserButton.setOnClickListener(v -> {
-            gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.GIESSKANNE);
-        });
+        wasserButton.setOnClickListener(v -> gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.GIESSKANNE));
 
         Button duengerButton = findViewById(R.id.duenger_button);
-        duengerButton.setOnClickListener(v -> {
-            gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.DUENGER);
-        });
+        duengerButton.setOnClickListener(v -> gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.DUENGER));
 
         Button samenButton = findViewById(R.id.samen_button);
-        samenButton.setOnClickListener(v -> {
-            gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.SAMEN);
-        });
+        samenButton.setOnClickListener(v -> gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.SAMEN));
 
         Button verschiebenButton = findViewById(R.id.verschieben_button);
-        verschiebenButton.setOnClickListener(v -> {
-            gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.VERSCHIEBEN);
-        });
+        verschiebenButton.setOnClickListener(v -> gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.VERSCHIEBEN));
 
         Button verkaufenButton = findViewById(R.id.verkaufen_button);
-        verkaufenButton.setOnClickListener(v -> {
-            gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.VERKAUFEN);
-        });
+        verkaufenButton.setOnClickListener(v -> gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.VERKAUFEN));
 
         // Listeners für die topfMitPflanzen Views werden bereits bei der Erstellung der Pflanzen hinzugefügt
     }

@@ -127,6 +127,7 @@ public class GartenViewModel extends ViewModel {
     /**
      * Runnable für das periodische Ausführen der Methode allePflanzenPruefen().
      */
+    // TODO prüfen ob man den Handler auch in einen anderen Thread auslagern kann.
     Runnable runnableAllePflanzenpruefen = new Runnable() {
         @Override
         public void run() {
