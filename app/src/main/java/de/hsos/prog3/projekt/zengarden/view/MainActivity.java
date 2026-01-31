@@ -2,6 +2,7 @@ package de.hsos.prog3.projekt.zengarden.view;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -140,20 +141,32 @@ public class MainActivity extends AppCompatActivity {
             case KEIMLING:
                 pflanzeImageView.setScaleX(0.25f);
                 pflanzeImageView.setScaleY(0.25f);
+                MarginLayoutParams keimlingMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
+                keimlingMargin.setMargins(0, 0, 0, 40);
+                pflanzeImageView.setLayoutParams(keimlingMargin);
+
                 //pflanzeImageView.setImageResource(R.drawable.keimling);
                 break;
             case SAEMLING:
-                pflanzeImageView.setScaleX(0.4f);
-                pflanzeImageView.setScaleY(0.4f);
+                pflanzeImageView.setScaleX(0.3f);
+                pflanzeImageView.setScaleY(0.3f);
+                MarginLayoutParams saemlingMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
+                saemlingMargin.setMargins(0, 0, 0, 60);
+                pflanzeImageView.setLayoutParams(saemlingMargin);
                 break;
             case KLEIN:
-                pflanzeImageView.setScaleX(0.75f);
-                pflanzeImageView.setScaleY(0.75f);
+                pflanzeImageView.setScaleX(0.6f);
+                pflanzeImageView.setScaleY(0.6f);
+                MarginLayoutParams kleinMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
+                kleinMargin.setMargins(0, 0, 0, 90);
+                pflanzeImageView.setLayoutParams(kleinMargin);
                 break;
             case AUSGEWACHSEN:
                 pflanzeImageView.setScaleX(1.0f);
                 pflanzeImageView.setScaleY(1.0f);
-
+                MarginLayoutParams ausgewachsenMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
+                ausgewachsenMargin.setMargins(0, 0, 0, 105);
+                pflanzeImageView.setLayoutParams(ausgewachsenMargin);
         }
 
 
