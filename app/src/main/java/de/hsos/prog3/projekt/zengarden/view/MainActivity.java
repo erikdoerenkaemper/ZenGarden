@@ -107,13 +107,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private void topfMitPflanzeDartstellen(FrameLayout topfMitPflanze, Pflanze pflanze){
         ImageView pflanzeImageView = topfMitPflanze.findViewById(R.id.pflanze);
+        ImageView beduerfnissImageView = topfMitPflanze.findViewById(R.id.beduerfniss);
 
         // Topf leer oder nicht leer
         if (pflanze == null){
             pflanzeImageView.setVisibility(View.GONE);
+            beduerfnissImageView.setVisibility(View.GONE);
+
             return;
         } else {
             pflanzeImageView.setVisibility(View.VISIBLE);
+            beduerfnissImageView.setVisibility(View.VISIBLE);
         }
 
 
@@ -124,13 +128,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case SONNENBLUME:
-                // pflanzeImageView.setBackgroundResource(R.drawable.tulip);
-                //TODO Sonnenblumen icon muss noch gezeichnet werden
+                pflanzeImageView.setImageResource(R.drawable.sonnenblume);
                 break;
 
             case ROSE:
-                // pflanzeImageView.setBackgroundResource(R.drawable.rose);
-                //TODO Rose icon muss noch gezeichnet werden
+                pflanzeImageView.setImageResource(R.drawable.rose);
                 break;
         }
 
@@ -144,8 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 MarginLayoutParams keimlingMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
                 keimlingMargin.setMargins(0, 0, 0, 40);
                 pflanzeImageView.setLayoutParams(keimlingMargin);
-
-                //pflanzeImageView.setImageResource(R.drawable.keimling);
+                pflanzeImageView.setImageResource(R.drawable.saemling);
                 break;
             case SAEMLING:
                 pflanzeImageView.setScaleX(0.3f);
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Aktuelles Event
-        ImageView beduerfnissImageView = topfMitPflanze.findViewById(R.id.beduerfniss);
+
         PflanzenEvent aktuellesEvent = pflanze.getAktuellesEvent();
         if (aktuellesEvent == null) {
             beduerfnissImageView.setVisibility(View.GONE);
@@ -183,7 +184,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case DUENGEN:
-                    //TODO Dünger icon muss noch gezeichnet werden
+                    beduerfnissImageView.setImageResource(R.drawable.duenger);
+                    beduerfnissImageView.setVisibility(View.VISIBLE);
                     break;
 
                 default:
@@ -202,6 +204,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void werkzeugButtonsDarstellen(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         //TODO werkzeug buttons richtig darstellen
+
+        // Ausgewählten Button etwas dunkler darstellen "gedrückt"
+
+        // nicht ausgewählte Buttons normal darstellen
     }
 
 
