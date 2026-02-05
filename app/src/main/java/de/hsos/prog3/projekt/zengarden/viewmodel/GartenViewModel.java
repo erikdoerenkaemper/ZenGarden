@@ -173,7 +173,7 @@ public class GartenViewModel extends ViewModel {
      * @author Erik Dörenkämper
      */
     public Garten gartenLaden(SharedPreferences sharedPreferences){
-        String json = sharedPreferences.getString("garten", null);
+        String json = sharedPreferences.getString("MainActivity.java", null);
 
         if (json == null){
             return new Garten();
@@ -193,6 +193,6 @@ public class GartenViewModel extends ViewModel {
         Gson gson = new Gson();
         String json = gson.toJson(garten);
 
-        sharedPreferences.edit().putString("garten", json).apply();
+        sharedPreferences.edit().putString("MainActivity.java", json).apply();
     }
 }
