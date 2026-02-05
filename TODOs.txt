@@ -1,0 +1,9 @@
+- Werkzeug Buttons richtig darstellen
+- Verschieben werkzeug
+- Multithreading
+- soundeffekte
+- Animationen
+- (Buttons zu ImageButtons machen???)
+- mehr spielbarer Content
+- Hintergrundbild einfügen
+- Aufsteller einfügen
