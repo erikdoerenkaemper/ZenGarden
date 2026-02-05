@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private GartenViewModel gartenViewModel;
 
-    private static final float DIMMED_ALPHA = 0.8f;
+    private static final float DIMMED_ALPHA = 0.7f;
     private static final float NORMAL_ALPHA = 1.0f;
 
     @Override
