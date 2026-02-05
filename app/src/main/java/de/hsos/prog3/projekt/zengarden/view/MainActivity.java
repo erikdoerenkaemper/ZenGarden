@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private GartenViewModel gartenViewModel;
 
+    private static final float DIMMED_ALPHA = 0.8f;
+    private static final float NORMAL_ALPHA = 1.0f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,10 +89,11 @@ public class MainActivity extends AppCompatActivity {
      */
     private void gartenDarstellen(Garten garten){
         GridLayout gartengrid = findViewById(R.id.gartengrid);
+        AusgewaehltesWerkzeug ausgewaehltesWerkzeug = gartenViewModel.getWerkzeug().getValue();
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 3; j++) {
                 FrameLayout topfMitPflanze = gartengrid.findViewWithTag("x: " + i + " y: " + j);
-                topfMitPflanzeDartstellen(topfMitPflanze, garten.getPflanze(i,j));
+                topfMitPflanzeDartstellen(topfMitPflanze, garten.getPflanze(i,j), ausgewaehltesWerkzeug);
             }
         }
 
@@ -103,9 +107,10 @@ public class MainActivity extends AppCompatActivity {
      * Passt die Views in topfMitPflanze anhand des Models an.
      * @param topfMitPflanze FrameLayout, das die Views des Topfes, der Pflanze und der Bedüfnisse enthält.
      * @param pflanze Model der Pflanze.
-     * @author Erik Dörenkämper
+     * @param ausgewaehltesWerkzeug Aktuell ausgewähltes Werkzeug zur Hervorhebung.
+     * @author Erik Dörenkämper, Jasper Groetzner
      */
-    private void topfMitPflanzeDartstellen(FrameLayout topfMitPflanze, Pflanze pflanze){
+    private void topfMitPflanzeDartstellen(FrameLayout topfMitPflanze, Pflanze pflanze, AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         ImageView pflanzeImageView = topfMitPflanze.findViewById(R.id.pflanze);
         ImageView beduerfnissImageView = topfMitPflanze.findViewById(R.id.beduerfniss);
 
@@ -114,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
             pflanzeImageView.setVisibility(View.GONE);
             beduerfnissImageView.setVisibility(View.GONE);
 
-            return;
         } else {
             pflanzeImageView.setVisibility(View.VISIBLE);
             beduerfnissImageView.setVisibility(View.VISIBLE);
@@ -122,77 +126,108 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Pflanzenart
-        switch (pflanze.getPflanzenart()){
-            case GAENSEBLUEMCHEN:
-                pflanzeImageView.setImageResource(R.drawable.marigold);
-                break;
+        if (pflanze != null) {
+            switch (pflanze.getPflanzenart()){
+                case GAENSEBLUEMCHEN:
+                    pflanzeImageView.setImageResource(R.drawable.marigold);
+                    break;
 
-            case SONNENBLUME:
-                pflanzeImageView.setImageResource(R.drawable.sonnenblume);
-                break;
+                case SONNENBLUME:
+                    pflanzeImageView.setImageResource(R.drawable.sonnenblume);
+                    break;
 
-            case ROSE:
-                pflanzeImageView.setImageResource(R.drawable.rose);
-                break;
+                case ROSE:
+                    pflanzeImageView.setImageResource(R.drawable.rose);
+                    break;
+            }
         }
 
 
 
         // Wachstumsphase
-        switch (pflanze.getWachstumsphase()) {
-            case KEIMLING:
-                pflanzeImageView.setScaleX(0.25f);
-                pflanzeImageView.setScaleY(0.25f);
-                MarginLayoutParams keimlingMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
-                keimlingMargin.setMargins(0, 0, 0, 40);
-                pflanzeImageView.setLayoutParams(keimlingMargin);
-                pflanzeImageView.setImageResource(R.drawable.saemling);
-                break;
-            case SAEMLING:
-                pflanzeImageView.setScaleX(0.3f);
-                pflanzeImageView.setScaleY(0.3f);
-                MarginLayoutParams saemlingMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
-                saemlingMargin.setMargins(0, 0, 0, 60);
-                pflanzeImageView.setLayoutParams(saemlingMargin);
-                break;
-            case KLEIN:
-                pflanzeImageView.setScaleX(0.6f);
-                pflanzeImageView.setScaleY(0.6f);
-                MarginLayoutParams kleinMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
-                kleinMargin.setMargins(0, 0, 0, 90);
-                pflanzeImageView.setLayoutParams(kleinMargin);
-                break;
-            case AUSGEWACHSEN:
-                pflanzeImageView.setScaleX(1.0f);
-                pflanzeImageView.setScaleY(1.0f);
-                MarginLayoutParams ausgewachsenMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
-                ausgewachsenMargin.setMargins(0, 0, 0, 105);
-                pflanzeImageView.setLayoutParams(ausgewachsenMargin);
+        if (pflanze != null) {
+            switch (pflanze.getWachstumsphase()) {
+                case KEIMLING:
+                    pflanzeImageView.setScaleX(0.25f);
+                    pflanzeImageView.setScaleY(0.25f);
+                    MarginLayoutParams keimlingMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
+                    keimlingMargin.setMargins(0, 0, 0, 40);
+                    pflanzeImageView.setLayoutParams(keimlingMargin);
+                    pflanzeImageView.setImageResource(R.drawable.saemling);
+                    break;
+                case SAEMLING:
+                    pflanzeImageView.setScaleX(0.3f);
+                    pflanzeImageView.setScaleY(0.3f);
+                    MarginLayoutParams saemlingMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
+                    saemlingMargin.setMargins(0, 0, 0, 60);
+                    pflanzeImageView.setLayoutParams(saemlingMargin);
+                    break;
+                case KLEIN:
+                    pflanzeImageView.setScaleX(0.6f);
+                    pflanzeImageView.setScaleY(0.6f);
+                    MarginLayoutParams kleinMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
+                    kleinMargin.setMargins(0, 0, 0, 90);
+                    pflanzeImageView.setLayoutParams(kleinMargin);
+                    break;
+                case AUSGEWACHSEN:
+                    pflanzeImageView.setScaleX(1.0f);
+                    pflanzeImageView.setScaleY(1.0f);
+                    MarginLayoutParams ausgewachsenMargin = (MarginLayoutParams) pflanzeImageView.getLayoutParams();
+                    ausgewachsenMargin.setMargins(0, 0, 0, 105);
+                    pflanzeImageView.setLayoutParams(ausgewachsenMargin);
+            }
         }
 
 
         // Aktuelles Event
+        if (pflanze != null) {
+            PflanzenEvent aktuellesEvent = pflanze.getAktuellesEvent();
+            if (aktuellesEvent == null) {
+                beduerfnissImageView.setVisibility(View.GONE);
+            } else {
+                switch (aktuellesEvent) {
+                    case GIESSEN:
+                        beduerfnissImageView.setImageResource(R.drawable.wassertropfen);
+                        beduerfnissImageView.setVisibility(View.VISIBLE);
+                        break;
 
-        PflanzenEvent aktuellesEvent = pflanze.getAktuellesEvent();
-        if (aktuellesEvent == null) {
-            beduerfnissImageView.setVisibility(View.GONE);
-        } else {
-            switch (aktuellesEvent) {
-                case GIESSEN:
-                    beduerfnissImageView.setImageResource(R.drawable.wassertropfen);
-                    beduerfnissImageView.setVisibility(View.VISIBLE);
-                    break;
+                    case DUENGEN:
+                        beduerfnissImageView.setImageResource(R.drawable.duenger);
+                        beduerfnissImageView.setVisibility(View.VISIBLE);
+                        break;
 
-                case DUENGEN:
-                    beduerfnissImageView.setImageResource(R.drawable.duenger);
-                    beduerfnissImageView.setVisibility(View.VISIBLE);
-                    break;
-
-                default:
-                    beduerfnissImageView.setVisibility(View.GONE);
-                    break;
+                    default:
+                        beduerfnissImageView.setVisibility(View.GONE);
+                        break;
+                }
             }
         }
+
+        // Hervorhebung basierend auf dem ausgewählten Werkzeug
+        boolean highlight = false;
+
+        if (ausgewaehltesWerkzeug == null || ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.NICHTS) {
+            highlight = true;
+        } else {
+            switch (ausgewaehltesWerkzeug) {
+                case GIESSKANNE:
+                    highlight = pflanze != null && pflanze.getAktuellesEvent() == PflanzenEvent.GIESSEN;
+                    break;
+                case DUENGER:
+                    highlight = pflanze != null && pflanze.getAktuellesEvent() == PflanzenEvent.DUENGEN;
+                    break;
+                case SAMEN:
+                    highlight = pflanze == null;
+                    break;
+                case VERSCHIEBEN:
+                case VERKAUFEN:
+                    highlight = pflanze != null;
+                    break;
+                default:
+                    highlight = true;
+            }
+        }
+        topfMitPflanze.setAlpha(highlight ? NORMAL_ALPHA : DIMMED_ALPHA);
     }
 
 
@@ -200,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
      * Stellt die Werkzeug Buttons dar.
      * Der Button mit dem aktuell ausgewählten Werkzeug wird hervorgehoben.
      * @param ausgewaehltesWerkzeug Werkzeug das aktuell ausgewählt wurde.
-     * @author Erik Dörenkämper, Jasper Groetzner
+     * @author Jasper Groetzner
      */
     private void werkzeugButtonsDarstellen(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         Button wasserButton = findViewById(R.id.wasser_button);
@@ -208,9 +243,6 @@ public class MainActivity extends AppCompatActivity {
         Button samenButton = findViewById(R.id.samen_button);
         Button verschiebenButton = findViewById(R.id.verschieben_button);
         Button verkaufenButton = findViewById(R.id.verkaufen_button);
-
-        final float DIMMED_ALPHA = 0.7f;
-        final float NORMAL_ALPHA = 1.0f;
 
         // Wenn ein Werkzeug ausgewählt ist, werden alle anderen abgedunkelt.
         if (ausgewaehltesWerkzeug != AusgewaehltesWerkzeug.NICHTS) {
@@ -229,16 +261,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Button Listeners setzen
-
     /**
      * Setzt die OnClickListener für die Werkzeugbuttons.
      * Listeners für die topfMitPflanzen Views werden bereits bei der Erstellung der Pflanzen hinzugefügt
      * @author Erik Dörenkämper, Jasper Groetzner
      */
     private void buttonListenersSetzen() {
-
-        // Listeners für die Werkzeugbuttons, an- und abwählbar
+        
         Button wasserButton = findViewById(R.id.wasser_button);
         wasserButton.setOnClickListener(v -> {
             if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.GIESSKANNE) {
@@ -290,11 +319,17 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Setzt die Observables für das ViewModel.
-     * @author Erik Dörenkämper
+     * @author Erik Dörenkämper, Jasper Groetzner
      */
     private void observablesSetzen(){
-        // Werkzeug Anzeige
-        gartenViewModel.getWerkzeug().observe(this, this::werkzeugButtonsDarstellen);
+        // Werkzeug Anzeige und Neubau des Gartens bei Werkzeugwechsel
+        gartenViewModel.getWerkzeug().observe(this, ausgewaehltesWerkzeug -> {
+            werkzeugButtonsDarstellen(ausgewaehltesWerkzeug);
+            Garten garten = gartenViewModel.getGartenLiveData().getValue();
+            if (garten != null) {
+                gartenDarstellen(garten);
+            }
+        });
 
         // Garten
         gartenViewModel.getGartenLiveData().observe(this, this::gartenDarstellen);
