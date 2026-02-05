@@ -200,55 +200,90 @@ public class MainActivity extends AppCompatActivity {
      * Stellt die Werkzeug Buttons dar.
      * Der Button mit dem aktuell ausgewählten Werkzeug wird hervorgehoben.
      * @param ausgewaehltesWerkzeug Werkzeug das aktuell ausgewählt wurde.
-     * @author -
+     * @author Erik Dörenkämper, Jasper Groetzner
      */
     private void werkzeugButtonsDarstellen(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
-        //TODO werkzeug buttons richtig darstellen
+        Button wasserButton = findViewById(R.id.wasser_button);
+        Button duengerButton = findViewById(R.id.duenger_button);
+        Button samenButton = findViewById(R.id.samen_button);
+        Button verschiebenButton = findViewById(R.id.verschieben_button);
+        Button verkaufenButton = findViewById(R.id.verkaufen_button);
 
-        // Ausgewählten Button etwas dunkler darstellen "gedrückt"
+        final float DIMMED_ALPHA = 0.7f;
+        final float NORMAL_ALPHA = 1.0f;
 
-        // nicht ausgewählte Buttons normal darstellen
+        // Wenn ein Werkzeug ausgewählt ist, werden alle anderen abgedunkelt.
+        if (ausgewaehltesWerkzeug != AusgewaehltesWerkzeug.NICHTS) {
+            wasserButton.setAlpha(ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.GIESSKANNE ? NORMAL_ALPHA : DIMMED_ALPHA);
+            duengerButton.setAlpha(ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.DUENGER ? NORMAL_ALPHA : DIMMED_ALPHA);
+            samenButton.setAlpha(ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.SAMEN ? NORMAL_ALPHA : DIMMED_ALPHA);
+            verschiebenButton.setAlpha(ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERSCHIEBEN ? NORMAL_ALPHA : DIMMED_ALPHA);
+            verkaufenButton.setAlpha(ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERKAUFEN ? NORMAL_ALPHA : DIMMED_ALPHA);
+        } else {
+            // Wenn kein Werkzeug ausgewählt ist, sind alle normal sichtbar.
+            wasserButton.setAlpha(NORMAL_ALPHA);
+            duengerButton.setAlpha(NORMAL_ALPHA);
+            samenButton.setAlpha(NORMAL_ALPHA);
+            verschiebenButton.setAlpha(NORMAL_ALPHA);
+            verkaufenButton.setAlpha(NORMAL_ALPHA);
+        }
     }
-
-
-
-
-
-
-
 
     // Button Listeners setzen
 
     /**
      * Setzt die OnClickListener für die Werkzeugbuttons.
      * Listeners für die topfMitPflanzen Views werden bereits bei der Erstellung der Pflanzen hinzugefügt
-     * @author Erik Dörenkämper
+     * @author Erik Dörenkämper, Jasper Groetzner
      */
     private void buttonListenersSetzen() {
 
-        // Listeners für die Werkzeugbuttons
+        // Listeners für die Werkzeugbuttons, an- und abwählbar
         Button wasserButton = findViewById(R.id.wasser_button);
-        wasserButton.setOnClickListener(v -> gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.GIESSKANNE));
+        wasserButton.setOnClickListener(v -> {
+            if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.GIESSKANNE) {
+                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.NICHTS);
+            } else {
+                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.GIESSKANNE);
+            }
+        });
 
         Button duengerButton = findViewById(R.id.duenger_button);
-        duengerButton.setOnClickListener(v -> gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.DUENGER));
+        duengerButton.setOnClickListener(v -> {
+            if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.DUENGER) {
+                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.NICHTS);
+            } else {
+                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.DUENGER);
+            }
+        });
 
         Button samenButton = findViewById(R.id.samen_button);
-        samenButton.setOnClickListener(v -> gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.SAMEN));
+        samenButton.setOnClickListener(v -> {
+            if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.SAMEN) {
+                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.NICHTS);
+            } else {
+                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.SAMEN);
+            }
+        });
 
         Button verschiebenButton = findViewById(R.id.verschieben_button);
-        verschiebenButton.setOnClickListener(v -> gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.VERSCHIEBEN));
+        verschiebenButton.setOnClickListener(v -> {
+            if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.VERSCHIEBEN) {
+                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.NICHTS);
+            } else {
+                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.VERSCHIEBEN);
+            }
+        });
 
         Button verkaufenButton = findViewById(R.id.verkaufen_button);
-        verkaufenButton.setOnClickListener(v -> gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.VERKAUFEN));
-
-        // Listeners für die topfMitPflanzen Views werden bereits bei der Erstellung der Pflanzen hinzugefügt
+        verkaufenButton.setOnClickListener(v -> {
+            if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.VERKAUFEN) {
+                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.NICHTS);
+            } else {
+                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.VERKAUFEN);
+            }
+        });
     }
-
-
-
-
-
 
 
     // Observables setzen
