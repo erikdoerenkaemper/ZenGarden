@@ -1,9 +1,9 @@
-- Werkzeug Buttons richtig darstellen
+- Werkzeug Buttons richtig darstellen - FERTIG
 - Verschieben werkzeug
 - Multithreading
 - soundeffekte
 - Animationen
 - (Buttons zu ImageButtons machen???)
 - mehr spielbarer Content
-- Hintergrundbild einfügen
+- Hintergrundbild einfügen - FERTIG
 - Aufsteller einfügen

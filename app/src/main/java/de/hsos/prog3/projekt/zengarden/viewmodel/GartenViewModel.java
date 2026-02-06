@@ -95,6 +95,7 @@ public class GartenViewModel extends ViewModel {
      */
     public void setWerkzeug(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         garten.setWerkzeug(ausgewaehltesWerkzeug);
+        ausgewaehltesWerkzeugMutableLiveData.setValue(ausgewaehltesWerkzeug);
     }
 
 
