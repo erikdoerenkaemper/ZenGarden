@@ -3,6 +3,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -375,5 +377,44 @@ public class MainActivity extends AppCompatActivity {
 
         // Garten
         gartenViewModel.getGartenLiveData().observe(this, this::gartenDarstellen);
+
+        // Event-Animation
+        gartenViewModel.getEventAnimation().observe(this, eventData -> {
+            if (eventData != null) {
+                PflanzenEvent event = (PflanzenEvent) eventData[0];
+                int x = (int) eventData[1];
+                int y = (int) eventData[2];
+                animateBeduerfniss(event, x, y);
+            }
+        });
+    }
+
+    /**
+     * Spielt eine Animation auf dem Bedürfnis-Icon einer Pflanze an einer bestimmten Position ab.
+     * Die Art der Animation hängt vom ausgelösten Pflanzen-Event ab.
+     *
+     * @param event Das Pflanzen-Event (z.B. GIESSEN, DUENGEN), das die Animation auslöst.
+     * @param x Die x-Koordinate der Pflanze im Gartengrid.
+     * @param y Die y-Koordinate der Pflanze im Gartengrid.
+     * @author Erik Dörenkämper, Jasper Groetzner
+     */
+    private void animateBeduerfniss(PflanzenEvent event, int x, int y) {
+        GridLayout gartengrid = findViewById(R.id.gartengrid);
+        FrameLayout topfMitPflanze = gartengrid.findViewWithTag("x: " + x + " y: " + y);
+        if (topfMitPflanze != null) {
+            ImageView beduerfnissImageView = topfMitPflanze.findViewById(R.id.beduerfniss);
+            Animation animation = null;
+            switch (event) {
+                case GIESSEN:
+                    animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
+                    break;
+                case DUENGEN:
+                    animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
+                    break;
+            }
+            if (animation != null) {
+                beduerfnissImageView.startAnimation(animation);
+            }
+        }
     }
 }

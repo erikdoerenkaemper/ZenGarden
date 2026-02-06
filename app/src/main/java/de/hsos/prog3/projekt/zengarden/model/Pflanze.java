@@ -11,6 +11,10 @@ public class Pflanze {
     private PflanzenEvent naechstesPflanzenEvent;
     private long zeitpunktDesNaechstenEvents;
 
+    private static final int WACHSTUM_KEIMLING_WERT = 10;
+    private static final int WACHSTUM_SAEMLING_WERT = 20;
+    private static final int WACHSTUM_KLEIN_WERT = 50;
+
     /**
      * Konstruktor für eine Pflanze.
      */
@@ -29,27 +33,30 @@ public class Pflanze {
      * @param ausgewaehltesWerkzeug Beim Anklicken ausgewähltes Werkzeug.
      * @author Erik Dörenkämper
      */
-    public void pflanzeWirdAngeklickt(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
+    public PflanzenEvent pflanzeWirdAngeklickt(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         switch (ausgewaehltesWerkzeug){
             case GIESSKANNE:
                 if (aktuellesEvent == PflanzenEvent.GIESSEN){
                     giessen();
+                    return PflanzenEvent.GIESSEN;
                 }
                 break;
             case DUENGER:
                 if (aktuellesEvent == PflanzenEvent.DUENGEN){
                     duengen();
+                    return PflanzenEvent.DUENGEN;
                 }
                 break;
             default: break;
         }
+        return null;
     }
 
     /**
      * Triggert die passende Methode für das aktuelle Event.
      * @author Erik Dörenkämper
      */
-    public void triggerEvent(){
+    public int triggerEvent(){
         zeitpunktDesNaechstenEvents = 0;
         switch (naechstesPflanzenEvent) {
             // Bei GIESSEN und DUENGEN muss jeweils nur zum naechsten Event gewechselt werden
@@ -58,9 +65,9 @@ public class Pflanze {
                 aktuellesEvent = naechstesPflanzenEvent;
                 break;
             case WACHSTUM:
-                wachsen();
-                break;
+                return wachsen();
         }
+        return 0;
     }
 
 
@@ -88,26 +95,31 @@ public class Pflanze {
      * Beim Erreichen der höchsten Stufe wird kein neues Event gesetzt.
      * @author Erik Dörenkämper
      */
-    private void wachsen(){
+    private int wachsen(){
+        int geld = 0;
         switch (wachstumsphase){
             case KEIMLING:
                 zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
                 naechstesPflanzenEvent = zufaelligesPflanzenEvent();
                 wachstumsphase = Wachstumsphase.SAEMLING;
+                geld = WACHSTUM_KEIMLING_WERT;
                 break;
             case SAEMLING:
                 zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
                 naechstesPflanzenEvent = zufaelligesPflanzenEvent();
                 wachstumsphase = Wachstumsphase.KLEIN;
+                geld = WACHSTUM_SAEMLING_WERT;
                 break;
             case KLEIN:
                 wachstumsphase = Wachstumsphase.AUSGEWACHSEN;
                 naechstesPflanzenEvent = null;
                 zeitpunktDesNaechstenEvents = 0;
+                geld = WACHSTUM_KLEIN_WERT;
                 break;
             default: break;
         }
         aktuellesEvent = null;
+        return geld;
     }
 
 

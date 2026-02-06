@@ -32,7 +32,7 @@ public class Garten {
      * @param y Zeile in der sich die Pflanze im Garten befindet.
      * @author Erik Dörenkämper, Jasper Groetzner
      */
-    public void topfWirdAngeklickt(int x, int y){
+    public PflanzenEvent topfWirdAngeklickt(int x, int y){
         Pflanze pflanze = pflanzen[x][y];
 
         if(pflanzeInDerHand != null){
@@ -40,7 +40,7 @@ public class Garten {
                 pflanzen[x][y] = pflanzeInDerHand;
                 pflanzeInDerHand = null;
             }
-            return;
+            return null;
         }
 
         // Wenn Topf nicht leer ist
@@ -50,13 +50,14 @@ public class Garten {
             } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERSCHIEBEN) {
                pflanzeVerschieben(x,y,pflanze);
             } else {
-                pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
+                return pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
             }
         }
         // Wenn Topf leer ist
         else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.SAMEN){
             neuePflanzeKaufen(x,y);
         }
+        return null;
     }
 
 
