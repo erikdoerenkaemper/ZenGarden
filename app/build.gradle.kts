@@ -34,7 +34,6 @@ android {
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:2.13.2")
     implementation("com.squareup.moshi:moshi:1.15.2")
     implementation(libs.appcompat)
     implementation(libs.material)
