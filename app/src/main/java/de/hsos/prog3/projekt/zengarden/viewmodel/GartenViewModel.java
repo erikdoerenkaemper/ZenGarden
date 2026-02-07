@@ -10,9 +10,9 @@ import androidx.lifecycle.ViewModel;
 import com.google.gson.Gson;
 
 import de.hsos.prog3.projekt.zengarden.model.AusgewaehltesWerkzeug;
+import de.hsos.prog3.projekt.zengarden.model.BenutzerAktion;
 import de.hsos.prog3.projekt.zengarden.model.Garten;
 import de.hsos.prog3.projekt.zengarden.model.Pflanze;
-import de.hsos.prog3.projekt.zengarden.model.PflanzenEvent;
 
 /**
  * ViewModel des ZenGarden.
@@ -44,7 +44,7 @@ public class GartenViewModel extends ViewModel {
      */
     private final MutableLiveData<Garten> gartenLiveData = new MutableLiveData<>();
 
-    private final MutableLiveData<Object[]> eventAnimation = new MutableLiveData<>();
+    private final MutableLiveData<Object[]> benutzerAktion = new MutableLiveData<>();
 
 
     /**
@@ -88,8 +88,8 @@ public class GartenViewModel extends ViewModel {
         return gartenLiveData;
     }
 
-    public LiveData<Object[]> getEventAnimation() {
-        return eventAnimation;
+    public LiveData<Object[]> getBenutzerAktion() {
+        return benutzerAktion;
     }
 
 
@@ -112,9 +112,9 @@ public class GartenViewModel extends ViewModel {
      * @author Erik Dörenkämper
      */
     public void topfWirdAngeklickt(int x, int y){
-        PflanzenEvent event = garten.topfWirdAngeklickt(x,y);
-        if(event != null) {
-            eventAnimation.setValue(new Object[]{event, x, y});
+        BenutzerAktion aktion = garten.topfWirdAngeklickt(x,y);
+        if(aktion != null) {
+            benutzerAktion.setValue(new Object[]{aktion, x, y});
         }
         gartenAktualisieren();
         gartenSpeichern(gartenSharedPreferences); // bei jeder Änderung des Gartens wird gespeichert

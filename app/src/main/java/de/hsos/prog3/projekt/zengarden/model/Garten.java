@@ -32,13 +32,14 @@ public class Garten {
      * @param y Zeile in der sich die Pflanze im Garten befindet.
      * @author Erik Dörenkämper, Jasper Groetzner
      */
-    public PflanzenEvent topfWirdAngeklickt(int x, int y){
+    public BenutzerAktion topfWirdAngeklickt(int x, int y){
         Pflanze pflanze = pflanzen[x][y];
 
         if(pflanzeInDerHand != null){
             if(pflanze == null){
                 pflanzen[x][y] = pflanzeInDerHand;
                 pflanzeInDerHand = null;
+                return BenutzerAktion.PFLANZE_VERSCHOBEN;
             }
             return null;
         }
@@ -47,15 +48,22 @@ public class Garten {
         if (pflanze != null){
             if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERKAUFEN){
                 pflanzeVerkaufen(x,y);
+                return BenutzerAktion.PFLANZE_VERKAUFT;
             } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERSCHIEBEN) {
                pflanzeVerschieben(x,y,pflanze);
-            } else {
-                return pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
+                return BenutzerAktion.PFLANZE_VERSCHOBEN;
+            } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.GIESSKANNE) {
+                pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
+                return BenutzerAktion.GIESSEN;
+            } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.DUENGER) {
+                pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
+                return BenutzerAktion.DUENGEN;
             }
         }
         // Wenn Topf leer ist
         else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.SAMEN){
             neuePflanzeKaufen(x,y);
+            return BenutzerAktion.PFLANZE_GEKAUFT;
         }
         return null;
     }

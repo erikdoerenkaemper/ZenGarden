@@ -1,4 +1,5 @@
 package de.hsos.prog3.projekt.zengarden.view;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import de.hsos.prog3.projekt.zengarden.R;
 import de.hsos.prog3.projekt.zengarden.model.AusgewaehltesWerkzeug;
+import de.hsos.prog3.projekt.zengarden.model.BenutzerAktion;
 import de.hsos.prog3.projekt.zengarden.model.Garten;
 import de.hsos.prog3.projekt.zengarden.model.Pflanze;
 import de.hsos.prog3.projekt.zengarden.model.PflanzenEvent;
@@ -117,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView pflanzeImageView = topfMitPflanze.findViewById(R.id.pflanze);
         ImageView beduerfnissImageView = topfMitPflanze.findViewById(R.id.beduerfniss);
 
-
+        // Topf leer oder nicht leer
         if (pflanze == null){
             pflanzeImageView.setVisibility(View.GONE);
             beduerfnissImageView.setVisibility(View.GONE);
@@ -126,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             pflanzeImageView.setVisibility(View.VISIBLE);
 
+            // Atmungs-Animation starten/stoppen
             atmungsAnimationDarstellen(pflanze, pflanzeImageView);
 
             // UI-Elemente für die Pflanze aktualisieren
@@ -138,17 +141,6 @@ public class MainActivity extends AppCompatActivity {
         pflanzenHervorhebung(topfMitPflanze, pflanze, ausgewaehltesWerkzeug);
     }
 
-    /**
-     * Startet oder stoppt die "Atmungs"-Animation für eine Pflanze.
-     * Die Animation wird nur gestartet, wenn die Pflanze kein aktuelles Bedürfnis (Event) hat
-     * und nicht bereits eine Animation läuft. Dies verhindert, dass die Animation unnötig
-     * zurückgesetzt wird und sorgt für eine asynchrone Darstellung über alle Pflanzen hinweg.
-     * Wenn ein Bedürfnis vorhanden ist, wird eine eventuell laufende Animation gestoppt.
-     *
-     * @param pflanzeImageView Das ImageView, auf dem die Animation abgespielt werden soll.
-     * @param pflanze Das Pflanzen-Model, das den Zustand (insb. aktuelles Event) enthält.
-     * @author Jasper Groetzner
-     */
     private void atmungsAnimationDarstellen(Pflanze pflanze, ImageView pflanzeImageView) {
         if (pflanze.getAktuellesEvent() == null) {
             // Nur starten, wenn keine Animation läuft
@@ -296,12 +288,6 @@ public class MainActivity extends AppCompatActivity {
                 case ROSE:
                     pflanzeImageView.setImageResource(R.drawable.rose);
                     break;
-                case EISGAENSEBLUEMCHEN:
-                    pflanzeImageView.setImageResource(R.drawable.marigold_eis);
-                    break;
-                case EISSONNENBLUME:
-                    pflanzeImageView.setImageResource(R.drawable.sonnenblume_eis);
-                    break;
             }
         }
     }
@@ -407,29 +393,29 @@ public class MainActivity extends AppCompatActivity {
         // Garten
         gartenViewModel.getGartenLiveData().observe(this, this::gartenDarstellen);
 
-        // Event-Animation
-        gartenViewModel.getEventAnimation().observe(this, eventData -> {
-            if (eventData != null) {
-                PflanzenEvent event = (PflanzenEvent) eventData[0];
-                int x = (int) eventData[1];
-                int y = (int) eventData[2];
-                werkzeugAnimationSpielen(event, x, y);
+        // BenutzerAktion-Animation
+        gartenViewModel.getBenutzerAktion().observe(this, aktionData -> {
+            if (aktionData != null) {
+                BenutzerAktion aktion = (BenutzerAktion) aktionData[0];
+                int x = (int) aktionData[1];
+                int y = (int) aktionData[2];
+                spieleBenutzerAktionAnimation(aktion, x, y);
             }
         });
     }
 
     /**
      * Spielt eine Animation auf einer temporären ImageView über einer Pflanze ab,
-     * um eine Interaktion wie Gießen oder Düngen zu visualisieren.
-     * Die Art der Animation und das angezeigte Icon hängen vom ausgelösten
-     * {@link PflanzenEvent} ab. Nach der Animation wird die ImageView wieder ausgeblendet.
+     * um eine Benutzerinteraktion zu visualisieren.
+     * Die Art der Animation und das angezeigte Icon hängen von der ausgelösten
+     * {@link BenutzerAktion} ab. Nach der Animation wird die ImageView wieder ausgeblendet.
      *
-     * @param event Das Pflanzen-Event (z.B. GIESSEN, DUENGEN), das die Animation auslöst.
+     * @param aktion Die BenutzerAktion (z.B. GIESSEN, PFLANZE_GEKAUFT), die die Animation auslöst.
      * @param x Die x-Koordinate der Pflanze im Gartengrid.
      * @param y Die y-Koordinate der Pflanze im Gartengrid.
      * @author Jasper Groetzner
      */
-    private void werkzeugAnimationSpielen(PflanzenEvent event, int x, int y) {
+    private void spieleBenutzerAktionAnimation(BenutzerAktion aktion, int x, int y) {
         GridLayout gartengrid = findViewById(R.id.gartengrid);
         FrameLayout topfMitPflanze = gartengrid.findViewWithTag("x: " + x + " y: " + y);
         if (topfMitPflanze == null) return;
@@ -438,7 +424,7 @@ public class MainActivity extends AppCompatActivity {
         Animation animation;
         int werkzeugIconId;
 
-        switch (event) {
+        switch (aktion) {
             case GIESSEN:
                 animation = AnimationUtils.loadAnimation(this, R.anim.drehen);
                 werkzeugIconId = R.drawable.giesskanne;
@@ -447,11 +433,21 @@ public class MainActivity extends AppCompatActivity {
                 animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
                 werkzeugIconId = R.drawable.duenger;
                 break;
-            default:
-                //todo Animationen hinzufügen
-                animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
-                werkzeugIconId = R.drawable.ic_launcher_foreground; // Platzhalter
+            case PFLANZE_GEKAUFT:
+                animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln2);
+                werkzeugIconId = R.drawable.samen_pack; //platzhalter
                 break;
+            case PFLANZE_VERKAUFT:
+                animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
+               werkzeugIconId = R.drawable.ic_launcher_foreground; //platzhalter
+                break;
+            case PFLANZE_VERSCHOBEN:
+                animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
+              werkzeugIconId = R.drawable.ic_launcher_foreground; //platzhalter
+                break;
+            default:
+
+                return; // Keine Animation für unbekannte Aktionen
         }
 
         animationsIcon.setImageResource(werkzeugIconId);
@@ -472,7 +468,4 @@ public class MainActivity extends AppCompatActivity {
 
         animationsIcon.startAnimation(animation);
     }
-
-
-
 }
