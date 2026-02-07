@@ -16,6 +16,11 @@ public class Garten {
     Pflanze[][] pflanzen = new Pflanze[6][3];
 
     /**
+     * Pflanze die in der Hand gehalten wird.
+     */
+    Pflanze pflanzeInDerHand = null;
+
+    /**
      * Das zur Laufzeit aktuell ausgewählte Werkzeug.
      */
     AusgewaehltesWerkzeug ausgewaehltesWerkzeug = AusgewaehltesWerkzeug.NICHTS;
@@ -25,25 +30,34 @@ public class Garten {
      * Führt eine passende Methode auf dem angeklickten Topf aus.
      * @param x Spalte in der sich die Pflanze im Garten befindet.
      * @param y Zeile in der sich die Pflanze im Garten befindet.
-     * @author Erik Dörenkämper
+     * @author Erik Dörenkämper, Jasper Groetzner
      */
-    public void topfWirdAngeklickt(int x, int y){
+    public PflanzenEvent topfWirdAngeklickt(int x, int y){
         Pflanze pflanze = pflanzen[x][y];
+
+        if(pflanzeInDerHand != null){
+            if(pflanze == null){
+                pflanzen[x][y] = pflanzeInDerHand;
+                pflanzeInDerHand = null;
+            }
+            return null;
+        }
 
         // Wenn Topf nicht leer ist
         if (pflanze != null){
             if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERKAUFEN){
                 pflanzeVerkaufen(x,y);
             } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERSCHIEBEN) {
-                // TODO Verschieben hinzufügen
+               pflanzeVerschieben(x,y,pflanze);
             } else {
-                pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
+                return pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
             }
         }
         // Wenn Topf leer ist
         else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.SAMEN){
             neuePflanzeKaufen(x,y);
         }
+        return null;
     }
 
 
@@ -70,6 +84,20 @@ public class Garten {
     private void pflanzeVerkaufen(int x,int y){
         geld += pflanzen[x][y].berechneWertDerPflanze();
         pflanzen[x][y]  = null;
+    }
+
+    /**
+     * Hebt die Pflanze auf dem ausgewählten Topf auf, indem sie in die Hand genommen wird.
+     * Der Topf an der ursprünglichen Position wird geleert.
+     *
+     * @param x Spalte, in der sich die zu verschiebende Pflanze befindet.
+     * @param y Zeile, in der sich die zu verschiebende Pflanze befindet.
+     * @param pflanze Die zu verschiebende Pflanze.
+     * @author Jasper Groetzner
+     */
+    private void pflanzeVerschieben(int x,int y, Pflanze pflanze){
+        pflanzeInDerHand = pflanze;
+        pflanzen[x][y] = null;
     }
 
 
@@ -138,6 +166,16 @@ public class Garten {
      * @author Erik Dörenkämper
      */
     public void setWerkzeug(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
-        this.ausgewaehltesWerkzeug = ausgewaehltesWerkzeug;
+        if(pflanzeInDerHand == null) {
+            this.ausgewaehltesWerkzeug = ausgewaehltesWerkzeug;
+        }
+    }
+
+    /**
+     * Getter für die Pflanze in der Hand.
+     * @return Die Pflanze in der Hand.
+     */
+    public Pflanze getPflanzeInDerHand() {
+        return pflanzeInDerHand;
     }
 }

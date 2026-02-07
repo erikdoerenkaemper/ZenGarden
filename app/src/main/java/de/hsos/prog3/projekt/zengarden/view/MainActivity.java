@@ -3,6 +3,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final float DIMMED_ALPHA = 0.7f;
     private static final float NORMAL_ALPHA = 1.0f;
+    private static final float HIGHLIGHT_ALPHA = 1.5f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,27 +127,98 @@ public class MainActivity extends AppCompatActivity {
             beduerfnissImageView.setVisibility(View.VISIBLE);
         }
 
-
         // Pflanzenart
-        if (pflanze != null) {
-            switch (pflanze.getPflanzenart()){
-                case GAENSEBLUEMCHEN:
-                    pflanzeImageView.setImageResource(R.drawable.marigold);
-                    break;
-
-                case SONNENBLUME:
-                    pflanzeImageView.setImageResource(R.drawable.sonnenblume);
-                    break;
-
-                case ROSE:
-                    pflanzeImageView.setImageResource(R.drawable.rose);
-                    break;
-            }
-        }
-
-
+        pflanzenartDarstellen(pflanze, pflanzeImageView);
 
         // Wachstumsphase
+        wachstumsphaseDarstellen(pflanze, pflanzeImageView);
+
+        // Aktuelles Event
+        aktuellesEventDarstellen(pflanze, beduerfnissImageView);
+
+        // Hervorhebung basierend auf dem ausgewählten Werkzeug
+        pflanzenHervorhebung(topfMitPflanze, pflanze, ausgewaehltesWerkzeug);
+    }
+
+    /**
+     * Hebt die Pflanze an der gegebenen Position hervor.
+     * Hebt die Hervorhebung auf, wenn die Position -1 ist.
+     * @author Erik Dörenkämper, Jasper Groetzner
+     */
+    private static void pflanzenHervorhebung(FrameLayout topfMitPflanze, Pflanze pflanze, AusgewaehltesWerkzeug ausgewaehltesWerkzeug) {
+        boolean highlight;
+
+        if (ausgewaehltesWerkzeug == null || ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.NICHTS) {
+            highlight = true;
+        } else {
+            switch (ausgewaehltesWerkzeug) {
+                case GIESSKANNE:
+                    highlight = pflanze != null && pflanze.getAktuellesEvent() == PflanzenEvent.GIESSEN;
+                    break;
+                case DUENGER:
+                    highlight = pflanze != null && pflanze.getAktuellesEvent() == PflanzenEvent.DUENGEN;
+                    break;
+                case SAMEN:
+                    highlight = pflanze == null;
+                    break;
+                case VERSCHIEBEN:
+                    highlight = pflanze != null;
+                    break;
+                case VERKAUFEN:
+                    highlight = pflanze != null;
+                    break;
+                default:
+                    highlight = true;
+            }
+        }
+        topfMitPflanze.setAlpha(highlight ? NORMAL_ALPHA : DIMMED_ALPHA);
+    }
+
+    /**
+     * Stellt das aktuelle Event (Bedürfnis) einer Pflanze dar, indem das entsprechende
+     * Icon in einem ImageView angezeigt wird. Wenn kein Event vorhanden ist,
+     * wird das ImageView ausgeblendet.
+     *
+     * @param pflanze Die Pflanze, deren aktuelles Event dargestellt werden soll.
+     * @param beduerfnissImageView Das ImageView, in dem das Event-Icon angezeigt wird.
+     * @author Jasper Groetzner, Erik Dörenkämper
+     */
+    private static void aktuellesEventDarstellen(Pflanze pflanze, ImageView beduerfnissImageView) {
+        if (pflanze != null) {
+            PflanzenEvent aktuellesEvent = pflanze.getAktuellesEvent();
+            if (aktuellesEvent == null) {
+                beduerfnissImageView.setVisibility(View.GONE);
+            } else {
+                switch (aktuellesEvent) {
+                    case GIESSEN:
+                        beduerfnissImageView.setImageResource(R.drawable.wassertropfen);
+                        beduerfnissImageView.setVisibility(View.VISIBLE);
+                        break;
+
+                    case DUENGEN:
+                        beduerfnissImageView.setImageResource(R.drawable.duenger);
+                        beduerfnissImageView.setVisibility(View.VISIBLE);
+                        break;
+
+                    default:
+                        beduerfnissImageView.setVisibility(View.GONE);
+                        break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Passt die visuelle Darstellung einer Pflanze entsprechend ihrer Wachstumsphase an.
+     * Dies umfasst die Anpassung der Größe (Skalierung) und des vertikalen Abstands (Margin)
+     * des ImageViews, um das Wachstum zu simulieren. Für die Phase "Keimling" wird zudem
+     * ein spezifisches Bild gesetzt.
+     *
+     * @param pflanzeImageView Das ImageView, das die Pflanze darstellt.
+     * @param pflanze Das Pflanzen-Model, das die aktuelle Wachstumsphase enthält.
+     * @author Jasper Groetzner, Erik Dörenkämper
+     */
+    private static void wachstumsphaseDarstellen(Pflanze pflanze, ImageView pflanzeImageView) {
         if (pflanze != null) {
             switch (pflanze.getWachstumsphase()) {
                 case KEIMLING:
@@ -177,57 +251,30 @@ public class MainActivity extends AppCompatActivity {
                     pflanzeImageView.setLayoutParams(ausgewachsenMargin);
             }
         }
+    }
 
-
-        // Aktuelles Event
+    /**
+     * Stellt die korrekte Grafik für die Pflanzenart dar, wenn die Pflanze ausgewachsen ist.
+     * @param pflanzeImageView Das ImageView-Element, das die Pflanzengrafik anzeigt.
+     * @param pflanze Das Pflanzenobjekt, dessen Art dargestellt werden soll.
+     * @author Jasper Groetzner, Erik Dörenkämper
+     */
+    private static void pflanzenartDarstellen(Pflanze pflanze, ImageView pflanzeImageView) {
         if (pflanze != null) {
-            PflanzenEvent aktuellesEvent = pflanze.getAktuellesEvent();
-            if (aktuellesEvent == null) {
-                beduerfnissImageView.setVisibility(View.GONE);
-            } else {
-                switch (aktuellesEvent) {
-                    case GIESSEN:
-                        beduerfnissImageView.setImageResource(R.drawable.wassertropfen);
-                        beduerfnissImageView.setVisibility(View.VISIBLE);
-                        break;
+            switch (pflanze.getPflanzenart()){
+                case GAENSEBLUEMCHEN:
+                    pflanzeImageView.setImageResource(R.drawable.marigold);
+                    break;
 
-                    case DUENGEN:
-                        beduerfnissImageView.setImageResource(R.drawable.duenger);
-                        beduerfnissImageView.setVisibility(View.VISIBLE);
-                        break;
+                case SONNENBLUME:
+                    pflanzeImageView.setImageResource(R.drawable.sonnenblume);
+                    break;
 
-                    default:
-                        beduerfnissImageView.setVisibility(View.GONE);
-                        break;
-                }
+                case ROSE:
+                    pflanzeImageView.setImageResource(R.drawable.rose);
+                    break;
             }
         }
-
-        // Hervorhebung basierend auf dem ausgewählten Werkzeug
-        boolean highlight = false;
-
-        if (ausgewaehltesWerkzeug == null || ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.NICHTS) {
-            highlight = true;
-        } else {
-            switch (ausgewaehltesWerkzeug) {
-                case GIESSKANNE:
-                    highlight = pflanze != null && pflanze.getAktuellesEvent() == PflanzenEvent.GIESSEN;
-                    break;
-                case DUENGER:
-                    highlight = pflanze != null && pflanze.getAktuellesEvent() == PflanzenEvent.DUENGEN;
-                    break;
-                case SAMEN:
-                    highlight = pflanze == null;
-                    break;
-                case VERSCHIEBEN:
-                case VERKAUFEN:
-                    highlight = pflanze != null;
-                    break;
-                default:
-                    highlight = true;
-            }
-        }
-        topfMitPflanze.setAlpha(highlight ? NORMAL_ALPHA : DIMMED_ALPHA);
     }
 
 
@@ -267,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
      * @author Erik Dörenkämper, Jasper Groetzner
      */
     private void buttonListenersSetzen() {
-        
+
         Button wasserButton = findViewById(R.id.wasser_button);
         wasserButton.setOnClickListener(v -> {
             if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.GIESSKANNE) {
@@ -314,9 +361,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-    // Observables setzen
-
     /**
      * Setzt die Observables für das ViewModel.
      * @author Erik Dörenkämper, Jasper Groetzner
@@ -333,5 +377,44 @@ public class MainActivity extends AppCompatActivity {
 
         // Garten
         gartenViewModel.getGartenLiveData().observe(this, this::gartenDarstellen);
+
+        // Event-Animation
+        gartenViewModel.getEventAnimation().observe(this, eventData -> {
+            if (eventData != null) {
+                PflanzenEvent event = (PflanzenEvent) eventData[0];
+                int x = (int) eventData[1];
+                int y = (int) eventData[2];
+                animateBeduerfniss(event, x, y);
+            }
+        });
+    }
+
+    /**
+     * Spielt eine Animation auf dem Bedürfnis-Icon einer Pflanze an einer bestimmten Position ab.
+     * Die Art der Animation hängt vom ausgelösten Pflanzen-Event ab.
+     *
+     * @param event Das Pflanzen-Event (z.B. GIESSEN, DUENGEN), das die Animation auslöst.
+     * @param x Die x-Koordinate der Pflanze im Gartengrid.
+     * @param y Die y-Koordinate der Pflanze im Gartengrid.
+     * @author Erik Dörenkämper, Jasper Groetzner
+     */
+    private void animateBeduerfniss(PflanzenEvent event, int x, int y) {
+        GridLayout gartengrid = findViewById(R.id.gartengrid);
+        FrameLayout topfMitPflanze = gartengrid.findViewWithTag("x: " + x + " y: " + y);
+        if (topfMitPflanze != null) {
+            ImageView beduerfnissImageView = topfMitPflanze.findViewById(R.id.beduerfniss);
+            Animation animation = null;
+            switch (event) {
+                case GIESSEN:
+                    animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
+                    break;
+                case DUENGEN:
+                    animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
+                    break;
+            }
+            if (animation != null) {
+                beduerfnissImageView.startAnimation(animation);
+            }
+        }
     }
 }

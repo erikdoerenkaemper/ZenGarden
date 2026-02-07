@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import de.hsos.prog3.projekt.zengarden.model.AusgewaehltesWerkzeug;
 import de.hsos.prog3.projekt.zengarden.model.Garten;
 import de.hsos.prog3.projekt.zengarden.model.Pflanze;
+import de.hsos.prog3.projekt.zengarden.model.PflanzenEvent;
 
 /**
  * ViewModel des ZenGarden.
@@ -42,6 +43,8 @@ public class GartenViewModel extends ViewModel {
      * LiveData für den gesamten Garten.
      */
     private final MutableLiveData<Garten> gartenLiveData = new MutableLiveData<>();
+
+    private final MutableLiveData<Object[]> eventAnimation = new MutableLiveData<>();
 
 
     /**
@@ -85,6 +88,9 @@ public class GartenViewModel extends ViewModel {
         return gartenLiveData;
     }
 
+    public LiveData<Object[]> getEventAnimation() {
+        return eventAnimation;
+    }
 
 
     // Deligierungen ans Model
@@ -106,7 +112,10 @@ public class GartenViewModel extends ViewModel {
      * @author Erik Dörenkämper
      */
     public void topfWirdAngeklickt(int x, int y){
-        garten.topfWirdAngeklickt(x,y);
+        PflanzenEvent event = garten.topfWirdAngeklickt(x,y);
+        if(event != null) {
+            eventAnimation.setValue(new Object[]{event, x, y});
+        }
         gartenAktualisieren();
         gartenSpeichern(gartenSharedPreferences); // bei jeder Änderung des Gartens wird gespeichert
     }
@@ -147,6 +156,7 @@ public class GartenViewModel extends ViewModel {
     private void allePflanzenPruefen(){
         long aktuelleZeit = System.currentTimeMillis();
         boolean eventWurdeGetriggert = false;
+        int geld = 0;
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 3; j++) {
                 Pflanze pflanze = garten.getPflanze(i, j);
@@ -154,12 +164,13 @@ public class GartenViewModel extends ViewModel {
 
                 // zeitpunktDesNaechstenEvents = 0 zeigt an, dass nicht mehr getriggert werden muss
                 if (pflanze.getZeitpunktDesNaechstenEvents() < aktuelleZeit && pflanze.getZeitpunktDesNaechstenEvents() != 0) {
-                    pflanze.triggerEvent();
+                    geld += pflanze.triggerEvent();
                     eventWurdeGetriggert = true;
                 }
             }
         }
         if (eventWurdeGetriggert) {
+            garten.bucheGeld(geld);
             gartenAktualisieren();
         }
     }
