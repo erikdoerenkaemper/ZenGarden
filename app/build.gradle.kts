@@ -4,9 +4,8 @@ plugins {
 
 android {
     namespace = "de.hsos.prog3.projekt.zengarden"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
+
 
     defaultConfig {
         applicationId = "de.hsos.prog3.projekt.zengarden"
