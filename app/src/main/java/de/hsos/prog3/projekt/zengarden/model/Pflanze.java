@@ -21,7 +21,7 @@ public class Pflanze {
     public Pflanze(){
         pflanzenart = zufaelligePflanzenart();
         wachstumsphase = Wachstumsphase.KEIMLING;
-        naechstesPflanzenEvent = PflanzenEvent.GIESSEN;
+        naechstesPflanzenEvent = zufaelligesPflanzenEvent();
         aktuellesEvent = null;
 
         // Zufällige Zeit zwischen 20 und 80 Sekunden
@@ -224,6 +224,7 @@ public class Pflanze {
     /**
      * Berechnet den Wert der Pflanze anhand der Wachstumsstufe.
      * @return Wert der Pflanze
+     * @author Erik Dörenkämper
      */
     public int berechneWertDerPflanze(){
         if (wachstumsphase == Wachstumsphase.KEIMLING){
