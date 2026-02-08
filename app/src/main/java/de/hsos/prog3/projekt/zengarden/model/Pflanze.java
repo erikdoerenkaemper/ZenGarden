@@ -34,16 +34,17 @@ public class Pflanze {
      * @author Erik Dörenkämper
      */
     public PflanzenEvent pflanzeWirdAngeklickt(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
+        if (ausgewaehltesWerkzeug == null){return null;}
         switch (ausgewaehltesWerkzeug){
             case GIESSKANNE:
                 if (aktuellesEvent == PflanzenEvent.GIESSEN){
-                    giessen();
+                    beduerfnisErfuellen();
                     return PflanzenEvent.GIESSEN;
                 }
                 break;
             case DUENGER:
                 if (aktuellesEvent == PflanzenEvent.DUENGEN){
-                    duengen();
+                    beduerfnisErfuellen();
                     return PflanzenEvent.DUENGEN;
                 }
                 break;
@@ -71,23 +72,11 @@ public class Pflanze {
     }
 
 
-    // giessen und duengen könnte man als beduerfnissErfüllen() zusammenfassen
-    private void giessen() {
+    private void beduerfnisErfuellen() {
         zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
         naechstesPflanzenEvent = zufaelligesPflanzenEvent();
         aktuellesEvent = null;
-
-
     }
-
-    private void duengen() {
-        zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
-        naechstesPflanzenEvent = zufaelligesPflanzenEvent();
-        aktuellesEvent = null;
-
-
-    }
-
 
 
     /**
