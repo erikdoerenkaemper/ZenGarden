@@ -23,7 +23,7 @@ public class Garten {
     /**
      * Das zur Laufzeit aktuell ausgewählte Werkzeug.
      */
-    AusgewaehltesWerkzeug ausgewaehltesWerkzeug = AusgewaehltesWerkzeug.NICHTS;
+    AusgewaehltesWerkzeug ausgewaehltesWerkzeug = null;
 
 
     /**

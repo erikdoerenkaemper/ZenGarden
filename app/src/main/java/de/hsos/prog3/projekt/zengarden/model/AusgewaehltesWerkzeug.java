@@ -10,5 +10,4 @@ public enum AusgewaehltesWerkzeug {
     SAMEN,
     VERSCHIEBEN,
     VERKAUFEN,
-    NICHTS
 }
