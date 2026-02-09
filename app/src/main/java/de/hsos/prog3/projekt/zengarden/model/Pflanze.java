@@ -21,7 +21,7 @@ public class Pflanze {
     public Pflanze(){
         pflanzenart = zufaelligePflanzenart();
         wachstumsphase = Wachstumsphase.KEIMLING;
-        naechstesPflanzenEvent = PflanzenEvent.GIESSEN;
+        naechstesPflanzenEvent = zufaelligesPflanzenEvent();
         aktuellesEvent = null;
 
         // Zufällige Zeit zwischen 20 und 80 Sekunden
@@ -34,16 +34,17 @@ public class Pflanze {
      * @author Erik Dörenkämper
      */
     public PflanzenEvent pflanzeWirdAngeklickt(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
+        if (ausgewaehltesWerkzeug == null){return null;}
         switch (ausgewaehltesWerkzeug){
             case GIESSKANNE:
                 if (aktuellesEvent == PflanzenEvent.GIESSEN){
-                    giessen();
+                    beduerfnisErfuellen();
                     return PflanzenEvent.GIESSEN;
                 }
                 break;
             case DUENGER:
                 if (aktuellesEvent == PflanzenEvent.DUENGEN){
-                    duengen();
+                    beduerfnisErfuellen();
                     return PflanzenEvent.DUENGEN;
                 }
                 break;
@@ -71,23 +72,11 @@ public class Pflanze {
     }
 
 
-    // giessen und duengen könnte man als beduerfnissErfüllen() zusammenfassen
-    private void giessen() {
+    private void beduerfnisErfuellen() {
         zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
         naechstesPflanzenEvent = zufaelligesPflanzenEvent();
         aktuellesEvent = null;
-
-
     }
-
-    private void duengen() {
-        zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
-        naechstesPflanzenEvent = zufaelligesPflanzenEvent();
-        aktuellesEvent = null;
-
-
-    }
-
 
 
     /**
@@ -230,10 +219,9 @@ public class Pflanze {
 
 
     /**
-     * Berechnet und gibt den aktuellen Wert der Pflanze zurück. Der Wert ist abhängig
-     * von der aktuellen Wachstumsphase der Pflanze.
-     *
-     * @return Der berechnete Wert der Pflanze als Ganzzahl.
+     * Berechnet den Wert der Pflanze anhand der Wachstumsstufe.
+     * @return Wert der Pflanze
+     * @author Erik Dörenkämper
      */
     public int berechneWertDerPflanze(){
         int basisWert = wachstumsphase.getBasisWert();

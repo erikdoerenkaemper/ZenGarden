@@ -7,7 +7,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.gson.Gson;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+
+import java.io.IOException;
 
 import de.hsos.prog3.projekt.zengarden.model.AusgewaehltesWerkzeug;
 import de.hsos.prog3.projekt.zengarden.model.BenutzerAktion;
@@ -185,15 +188,24 @@ public class GartenViewModel extends ViewModel {
      * @author Erik Dörenkämper
      */
     public Garten gartenLaden(SharedPreferences sharedPreferences){
-        String json = sharedPreferences.getString("MainActivity.java", null);
+        String json = sharedPreferences.getString("garten", null);
 
         if (json == null){
             return new Garten();
         }
 
-        Gson gson = new Gson();
-        return gson.fromJson(json, Garten.class);
 
+        Moshi moshi = new Moshi.Builder().build();
+        JsonAdapter<Garten> jsonAdapter = moshi.adapter(Garten.class);
+
+        Garten geladenerGarten;
+        try {
+            geladenerGarten = jsonAdapter.fromJson(json);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return geladenerGarten;
     }
 
     /**
@@ -202,9 +214,10 @@ public class GartenViewModel extends ViewModel {
      * @author Erik Dörenkämper
      */
     public void gartenSpeichern(SharedPreferences sharedPreferences) {
-        Gson gson = new Gson();
-        String json = gson.toJson(garten);
+        Moshi moshi = new Moshi.Builder().build();
+        JsonAdapter<Garten> jsonAdapter = moshi.adapter(Garten.class);
 
-        sharedPreferences.edit().putString("MainActivity.java", json).apply();
+        String json = jsonAdapter.toJson(garten);
+        sharedPreferences.edit().putString("garten", json).apply();
     }
 }

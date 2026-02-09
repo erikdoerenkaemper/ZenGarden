@@ -1,3 +1,4 @@
+Programmieren:
 - Werkzeug Buttons richtig darstellen - FERTIG
 - Verschieben werkzeug - Fertig
 - Multithreading
@@ -7,3 +8,9 @@
 - mehr spielbarer Content
 - Hintergrundbild einfügen - FERTIG
 - Aufsteller einfügen
+(Klasse/Methoden zum testen???)
+
+
+Algemeines zur Abgabe:
+- Eidesstattliche Erklärung
+- readme.md

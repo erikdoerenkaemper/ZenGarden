@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     private static void pflanzenHervorhebung(FrameLayout topfMitPflanze, Pflanze pflanze, AusgewaehltesWerkzeug ausgewaehltesWerkzeug) {
         boolean highlight;
 
-        if (ausgewaehltesWerkzeug == null || ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.NICHTS) {
+        if (ausgewaehltesWerkzeug == null) {
             highlight = true;
         } else {
             switch (ausgewaehltesWerkzeug) {
@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
         Button verkaufenButton = findViewById(R.id.verkaufen_button);
 
         // Wenn ein Werkzeug ausgewählt ist, werden alle anderen abgedunkelt.
-        if (ausgewaehltesWerkzeug != AusgewaehltesWerkzeug.NICHTS) {
+        if (ausgewaehltesWerkzeug != null) {
             wasserButton.setAlpha(ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.GIESSKANNE ? NORMAL_ALPHA : DIMMED_ALPHA);
             duengerButton.setAlpha(ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.DUENGER ? NORMAL_ALPHA : DIMMED_ALPHA);
             samenButton.setAlpha(ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.SAMEN ? NORMAL_ALPHA : DIMMED_ALPHA);
@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
         Button wasserButton = findViewById(R.id.wasser_button);
         wasserButton.setOnClickListener(v -> {
             if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.GIESSKANNE) {
-                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.NICHTS);
+                gartenViewModel.setWerkzeug(null);
             } else {
                 gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.GIESSKANNE);
             }
@@ -342,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
         Button duengerButton = findViewById(R.id.duenger_button);
         duengerButton.setOnClickListener(v -> {
             if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.DUENGER) {
-                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.NICHTS);
+                gartenViewModel.setWerkzeug(null);
             } else {
                 gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.DUENGER);
             }
@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
         Button samenButton = findViewById(R.id.samen_button);
         samenButton.setOnClickListener(v -> {
             if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.SAMEN) {
-                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.NICHTS);
+                gartenViewModel.setWerkzeug(null);
             } else {
                 gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.SAMEN);
             }
@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
         Button verschiebenButton = findViewById(R.id.verschieben_button);
         verschiebenButton.setOnClickListener(v -> {
             if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.VERSCHIEBEN) {
-                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.NICHTS);
+                gartenViewModel.setWerkzeug(null);
             } else {
                 gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.VERSCHIEBEN);
             }
@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
         Button verkaufenButton = findViewById(R.id.verkaufen_button);
         verkaufenButton.setOnClickListener(v -> {
             if (gartenViewModel.getWerkzeug().getValue() == AusgewaehltesWerkzeug.VERKAUFEN) {
-                gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.NICHTS);
+                gartenViewModel.setWerkzeug(null);
             } else {
                 gartenViewModel.setWerkzeug(AusgewaehltesWerkzeug.VERKAUFEN);
             }

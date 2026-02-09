@@ -4,9 +4,8 @@ plugins {
 
 android {
     namespace = "de.hsos.prog3.projekt.zengarden"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
+
 
     defaultConfig {
         applicationId = "de.hsos.prog3.projekt.zengarden"
@@ -34,7 +33,7 @@ android {
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:2.13.2")
+    implementation("com.squareup.moshi:moshi:1.15.2")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
