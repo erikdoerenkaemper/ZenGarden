@@ -1,6 +1,6 @@
 Programmieren:
 - Werkzeug Buttons richtig darstellen - FERTIG
-- Verschieben werkzeug
+- Verschieben werkzeug - Fertig
 - Multithreading
 - soundeffekte
 - Animationen

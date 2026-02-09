@@ -33,7 +33,7 @@ public class Garten {
      * @return gibt das ausgeführte Event zurück
      * @author Erik Dörenkämper, Jasper Groetzner
      */
-    public PflanzenEvent topfWirdAngeklickt(int x, int y){
+    public BenutzerAktion topfWirdAngeklickt(int x, int y){
         Pflanze pflanze = pflanzen[x][y];
 
         if(pflanzeInDerHand != null){
@@ -45,6 +45,7 @@ public class Garten {
         if (pflanze != null){
             if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERKAUFEN){
                 pflanzeVerkaufen(x,y);
+                return BenutzerAktion.PFLANZE_VERKAUFT;
             } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERSCHIEBEN) {
                pflanzeInDieHandNehmen(x,y,pflanze);
             } else {
@@ -54,6 +55,7 @@ public class Garten {
         // Wenn Topf leer ist
         else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.SAMEN){
             neuePflanzeKaufen(x,y);
+            return BenutzerAktion.PFLANZE_GEKAUFT;
         }
         return null;
     }

@@ -1,4 +1,5 @@
 package de.hsos.prog3.projekt.zengarden.view;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import de.hsos.prog3.projekt.zengarden.R;
 import de.hsos.prog3.projekt.zengarden.model.AusgewaehltesWerkzeug;
+import de.hsos.prog3.projekt.zengarden.model.BenutzerAktion;
 import de.hsos.prog3.projekt.zengarden.model.Garten;
 import de.hsos.prog3.projekt.zengarden.model.Pflanze;
 import de.hsos.prog3.projekt.zengarden.model.PflanzenEvent;
@@ -33,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final float DIMMED_ALPHA = 0.7f;
     private static final float NORMAL_ALPHA = 1.0f;
-    private static final float HIGHLIGHT_ALPHA = 1.5f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Passt die Views in topfMitPflanze anhand des Models an.
+     * Passt die Views in topfMitPflanze anhand des Models an. Startet oder stoppt Animationen
+     * basierend auf dem Pflanzenzustand.
      * @param topfMitPflanze FrameLayout, das die Views des Topfes, der Pflanze und der Bedüfnisse enthält.
      * @param pflanze Model der Pflanze.
      * @param ausgewaehltesWerkzeug Aktuell ausgewähltes Werkzeug zur Hervorhebung.
@@ -121,23 +123,36 @@ public class MainActivity extends AppCompatActivity {
         if (pflanze == null){
             pflanzeImageView.setVisibility(View.GONE);
             beduerfnissImageView.setVisibility(View.GONE);
+            pflanzeImageView.clearAnimation();
 
         } else {
             pflanzeImageView.setVisibility(View.VISIBLE);
-            beduerfnissImageView.setVisibility(View.VISIBLE);
+
+            // Atmungs-Animation starten/stoppen
+            atmungsAnimationDarstellen(pflanze, pflanzeImageView);
+
+            // UI-Elemente für die Pflanze aktualisieren
+            pflanzenartDarstellen(pflanze, pflanzeImageView);
+            wachstumsphaseDarstellen(pflanze, pflanzeImageView);
+            aktuellesEventDarstellen(pflanze, beduerfnissImageView);
         }
-
-        // Pflanzenart
-        pflanzenartDarstellen(pflanze, pflanzeImageView);
-
-        // Wachstumsphase
-        wachstumsphaseDarstellen(pflanze, pflanzeImageView);
-
-        // Aktuelles Event
-        aktuellesEventDarstellen(pflanze, beduerfnissImageView);
 
         // Hervorhebung basierend auf dem ausgewählten Werkzeug
         pflanzenHervorhebung(topfMitPflanze, pflanze, ausgewaehltesWerkzeug);
+    }
+
+    private void atmungsAnimationDarstellen(Pflanze pflanze, ImageView pflanzeImageView) {
+        if (pflanze.getAktuellesEvent() == null) {
+            // Nur starten, wenn keine Animation läuft
+            if (pflanzeImageView.getAnimation() == null) {
+                Animation atmung = AnimationUtils.loadAnimation(this, R.anim.pflanzenatmung);
+                // Zufälliger Start-Offset, um die Animationen asynchron zu machen
+                atmung.setStartOffset((long) (Math.random() * 1500));
+                pflanzeImageView.startAnimation(atmung);
+            }
+        } else {
+            pflanzeImageView.clearAnimation();
+        }
     }
 
     /**
@@ -378,43 +393,79 @@ public class MainActivity extends AppCompatActivity {
         // Garten
         gartenViewModel.getGartenLiveData().observe(this, this::gartenDarstellen);
 
-        // Event-Animation
-        gartenViewModel.getEventAnimation().observe(this, eventData -> {
-            if (eventData != null) {
-                PflanzenEvent event = (PflanzenEvent) eventData[0];
-                int x = (int) eventData[1];
-                int y = (int) eventData[2];
-                animateBeduerfniss(event, x, y);
+        // BenutzerAktion-Animation
+        gartenViewModel.getBenutzerAktion().observe(this, aktionData -> {
+            if (aktionData != null) {
+                BenutzerAktion aktion = (BenutzerAktion) aktionData[0];
+                int x = (int) aktionData[1];
+                int y = (int) aktionData[2];
+                spieleBenutzerAktionAnimation(aktion, x, y);
             }
         });
     }
 
     /**
-     * Spielt eine Animation auf dem Bedürfnis-Icon einer Pflanze an einer bestimmten Position ab.
-     * Die Art der Animation hängt vom ausgelösten Pflanzen-Event ab.
+     * Spielt eine Animation auf einer temporären ImageView über einer Pflanze ab,
+     * um eine Benutzerinteraktion zu visualisieren.
+     * Die Art der Animation und das angezeigte Icon hängen von der ausgelösten
+     * {@link BenutzerAktion} ab. Nach der Animation wird die ImageView wieder ausgeblendet.
      *
-     * @param event Das Pflanzen-Event (z.B. GIESSEN, DUENGEN), das die Animation auslöst.
+     * @param aktion Die BenutzerAktion (z.B. GIESSEN, PFLANZE_GEKAUFT), die die Animation auslöst.
      * @param x Die x-Koordinate der Pflanze im Gartengrid.
      * @param y Die y-Koordinate der Pflanze im Gartengrid.
-     * @author Erik Dörenkämper, Jasper Groetzner
+     * @author Jasper Groetzner
      */
-    private void animateBeduerfniss(PflanzenEvent event, int x, int y) {
+    private void spieleBenutzerAktionAnimation(BenutzerAktion aktion, int x, int y) {
         GridLayout gartengrid = findViewById(R.id.gartengrid);
         FrameLayout topfMitPflanze = gartengrid.findViewWithTag("x: " + x + " y: " + y);
-        if (topfMitPflanze != null) {
-            ImageView beduerfnissImageView = topfMitPflanze.findViewById(R.id.beduerfniss);
-            Animation animation = null;
-            switch (event) {
-                case GIESSEN:
-                    animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
-                    break;
-                case DUENGEN:
-                    animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
-                    break;
-            }
-            if (animation != null) {
-                beduerfnissImageView.startAnimation(animation);
-            }
+        if (topfMitPflanze == null) return;
+
+        ImageView animationsIcon = topfMitPflanze.findViewById(R.id.animation_icon);
+        Animation animation;
+        int werkzeugIconId;
+
+        switch (aktion) {
+            case GIESSEN:
+                animation = AnimationUtils.loadAnimation(this, R.anim.drehen);
+                werkzeugIconId = R.drawable.giesskanne;
+                break;
+            case DUENGEN:
+                animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
+                werkzeugIconId = R.drawable.duenger;
+                break;
+            case PFLANZE_GEKAUFT:
+                animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln2);
+                werkzeugIconId = R.drawable.samen_pack; //platzhalter
+                break;
+            case PFLANZE_VERKAUFT:
+                animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
+               werkzeugIconId = R.drawable.ic_launcher_foreground; //platzhalter
+                break;
+            case PFLANZE_VERSCHOBEN:
+                animation = AnimationUtils.loadAnimation(this, R.anim.schuetteln);
+              werkzeugIconId = R.drawable.ic_launcher_foreground; //platzhalter
+                break;
+            default:
+
+                return; // Keine Animation für unbekannte Aktionen
         }
+
+        animationsIcon.setImageResource(werkzeugIconId);
+        animationsIcon.setVisibility(View.VISIBLE);
+
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                animationsIcon.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        animationsIcon.startAnimation(animation);
     }
 }

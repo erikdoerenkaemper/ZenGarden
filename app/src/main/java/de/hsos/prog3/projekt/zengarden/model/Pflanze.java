@@ -147,31 +147,38 @@ public class Pflanze {
     }
 
 
+
     /**
-     * <p>Generiert mit unterschiedlichen Wahrscheinlichkeiten eine zufällige Pflanzenart.<br>
-     * Sonnenblume -> 50%<br>
-     * Gänseblümchen -> 40%<br>
-     * Rose -> 10%</p>
+     * Generiert mit unterschiedlichen Wahrscheinlichkeiten eine zufällige Pflanzenart.
+     *
+     *   Sonnenblume: 40%
+     *   Gänseblümchen: 30%
+     *   Rose: 15%
+     *   Eissonnenblume: 10%
+     *   Eisgänseblümchen: 5%
+     *
+     *
      * @return Generierte Pflanzenart
-     * @author Erik Dörenkämper
+     * @author Erik Dörenkämper, Jasper Groetzner
      */
     private Pflanzenart zufaelligePflanzenart(){
-        Pflanzenart zufaelligePflanzenart;
         int zufall = (int) (Math.random() * 100);
 
-        // 50% Sonnenblumen, 40% Gänseblümchen, 10% Rose
-        if (zufall < 50){
-            zufaelligePflanzenart = Pflanzenart.SONNENBLUME;
-        } else if (zufall < 90){
-            zufaelligePflanzenart = Pflanzenart.GAENSEBLUEMCHEN;
-        } else {
-            zufaelligePflanzenart = Pflanzenart.ROSE;
-        }
 
-        return zufaelligePflanzenart;
+        if (zufall < 40) { // 0-39 (40%)
+            return Pflanzenart.SONNENBLUME;
+        } else if (zufall < 70) { // 40-69 (30%)
+            return Pflanzenart.GAENSEBLUEMCHEN;
+        } else if (zufall < 85) { // 70-84 (15%)
+            return Pflanzenart.ROSE;
+        } else if (zufall < 95) { // 85-94 (10%)
+            return Pflanzenart.EISSONNENBLUME;
+        } else { // 95-99 (5%)
+            return Pflanzenart.EISGAENSEBLUEMCHEN;
+        }
     }
 
-    // getter
+
 
     /**
      * Getter für die Zeitpunkt des nächsten Events.
@@ -210,20 +217,17 @@ public class Pflanze {
     }
 
 
+
     /**
      * Berechnet den Wert der Pflanze anhand der Wachstumsstufe.
      * @return Wert der Pflanze
      * @author Erik Dörenkämper
      */
     public int berechneWertDerPflanze(){
-        if (wachstumsphase == Wachstumsphase.KEIMLING){
-            return 100;
-        } else if (wachstumsphase == Wachstumsphase.SAEMLING) {
-            return 150;
-        } else if (wachstumsphase == Wachstumsphase.KLEIN) {
-            return 200;
-        } else {
-            return 300;
-        }
+        int basisWert = wachstumsphase.getBasisWert();
+        double multiplikator = pflanzenart.getWertMultiplikator();
+
+        return (int) (basisWert * multiplikator);
     }
+
 }

@@ -32,4 +32,13 @@
         android:padding="4dp"
         />
 
+    <!-- Werkzeug Benutzt Icon -->
+    <ImageView
+        android:id="@+id/animation_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center|top"
+        android:visibility="gone"
+        />
+
 </FrameLayout>
