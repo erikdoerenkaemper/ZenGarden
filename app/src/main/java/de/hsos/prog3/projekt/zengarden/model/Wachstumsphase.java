@@ -5,10 +5,10 @@ package de.hsos.prog3.projekt.zengarden.model;
  * @author Erik Dörenkämper
  */
 public enum Wachstumsphase {
-    KEIMLING(100),
-    SAEMLING(150),
-    KLEIN(200),
-    AUSGEWACHSEN(300);
+    KEIMLING(50),
+    SAEMLING(75),
+    KLEIN(100),
+    AUSGEWACHSEN(200);
     public final int basisWert;
     Wachstumsphase(int basisWert) {
         this.basisWert = basisWert;

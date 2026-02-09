@@ -33,13 +33,8 @@ public class Garten {
      * @return gibt das ausgeführte Event zurück
      * @author Erik Dörenkämper, Jasper Groetzner
      */
-    public BenutzerAktion topfWirdAngeklickt(int x, int y){
+     public BenutzerAktion topfWirdAngeklickt(int x, int y){
         Pflanze pflanze = pflanzen[x][y];
-
-        if(pflanzeInDerHand != null){
-            pflanzeAusDerHandEinpflanzen(pflanze,x,y);
-            return null;
-        }
 
         // Wenn Topf nicht leer ist
         if (pflanze != null){
@@ -47,30 +42,50 @@ public class Garten {
                 pflanzeVerkaufen(x,y);
                 return BenutzerAktion.PFLANZE_VERKAUFT;
             } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERSCHIEBEN) {
-               pflanzeInDieHandNehmen(x,y,pflanze);
-            } else {
-                return pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
+                pflanzeVerschieben(x,y);
+                return BenutzerAktion.PFLANZE_VERSCHOBEN;
+            } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.GIESSKANNE) {
+                pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
+                return BenutzerAktion.GIESSEN;
+            } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.DUENGER) {
+                pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
+                return BenutzerAktion.DUENGEN;
             }
         }
         // Wenn Topf leer ist
-        else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.SAMEN){
-            neuePflanzeKaufen(x,y);
-            return BenutzerAktion.PFLANZE_GEKAUFT;
+        else {
+            if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.SAMEN){
+                neuePflanzeKaufen(x,y);
+                return BenutzerAktion.PFLANZE_GEKAUFT;
+            } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERSCHIEBEN) {
+                pflanzeVerschieben(x,y);
+                return BenutzerAktion.PFLANZE_VERSCHOBEN;
+            }
         }
         return null;
     }
 
     /**
-     * Setzt bei leerem Topf die Pflanze in der Hand in diesen Topf.
-     * @param angeklicktePflanze Pflanze/Topf die/der angeklickt wurde
-     * @param x Spalte in die die Pflanze in der Hand gesetzt werden soll.
-     * @param y Zeile in die die Pflanze in der Hand gesetzt werden soll.
-     * @author Erik Dörenkämper
+     * Verschiebt eine Pflanze von einem Topf in einen anderen.
+     * Wenn keine Pflanze in der Hand ist, wird die ausgewählte Pflanze in die Hand genommen.
+     * Wenn eine Pflanze in der Hand ist, wird diese in den ausgewählten leeren Topf gesetzt.
+     * @param x Spalte des angeklickten Topfes.
+     * @param y Zeile des angeklickten Topfes.
+     * @author Jasper Groetzner
      */
-    private void pflanzeAusDerHandEinpflanzen(Pflanze angeklicktePflanze, int x, int y){
-        if(angeklicktePflanze == null){
-            pflanzen[x][y] = pflanzeInDerHand;
-            pflanzeInDerHand = null;
+    private void pflanzeVerschieben(int x, int y) {
+        if (pflanzeInDerHand == null) {
+            // Nehmen eine Pflanze in die Hand
+            if (pflanzen[x][y] != null) {
+                pflanzeInDerHand = pflanzen[x][y];
+                pflanzen[x][y] = null;
+            }
+        } else {
+            // Setzen eine Pflanze aus der Hand
+            if (pflanzen[x][y] == null) {
+                pflanzen[x][y] = pflanzeInDerHand;
+                pflanzeInDerHand = null;
+            }
         }
     }
 
@@ -81,7 +96,7 @@ public class Garten {
      * @author Erik Dörenkämper
      */
     private void neuePflanzeKaufen(int x,int y){
-        if (geld > 100) {
+        if (geld >= 100) {
             pflanzen[x][y] = new Pflanze();
             geld -= 100;
         }
@@ -97,19 +112,6 @@ public class Garten {
     private void pflanzeVerkaufen(int x,int y){
         geld += pflanzen[x][y].berechneWertDerPflanze();
         pflanzen[x][y]  = null;
-    }
-
-    /**
-     * Hebt die Pflanze auf dem ausgewählten Topf auf, indem sie in die Hand genommen wird.
-     * Der Topf an der ursprünglichen Position wird geleert.
-     * @param x Spalte des Topfes der geleert werden muss
-     * @param y Zeile des Topfes der geleert werden muss
-     * @param pflanze Die Pflanze die in die Hand genommen werden soll
-     * @author Jasper Groetzner
-     */
-    private void pflanzeInDieHandNehmen(int x,int y, Pflanze pflanze){
-        pflanzeInDerHand = pflanze;
-        pflanzen[x][y] = null;
     }
 
 
