@@ -30,36 +30,45 @@ public class Garten {
      * Führt eine passende Methode auf dem angeklickten Topf aus.
      * @param x Spalte in der sich die Pflanze im Garten befindet.
      * @param y Zeile in der sich die Pflanze im Garten befindet.
-     * @return gibt das ausgeführte Event zurück
+     * @return gibt ein Array mit der Aktion und optionalen Zusatzdaten zurück.
      * @author Erik Dörenkämper, Jasper Groetzner
      */
-     public BenutzerAktion topfWirdAngeklickt(int x, int y){
+    public Object[] topfWirdAngeklickt(int x, int y){
         Pflanze pflanze = pflanzen[x][y];
 
-        // Wenn Topf nicht leer ist
+        if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERSCHIEBEN) {
+            if (pflanzeInDerHand == null) {
+                if (pflanze != null) {
+                    pflanzeVerschieben(x, y);
+                    return new Object[]{BenutzerAktion.PFLANZE_VERSCHOBEN};
+                }
+            } else {
+                if (pflanze == null) {
+                    pflanzeVerschieben(x, y);
+                    return new Object[]{BenutzerAktion.PFLANZE_WIEDEREINGEPFLANZT};
+                }
+            }
+            return null; // No valid move action
+        }
+
         if (pflanze != null){
             if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERKAUFEN){
-                pflanzeVerkaufen(x,y);
-                return BenutzerAktion.PFLANZE_VERKAUFT;
-            } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERSCHIEBEN) {
-                pflanzeVerschieben(x,y);
-                return BenutzerAktion.PFLANZE_VERSCHOBEN;
+                int verkaufswert = pflanzeVerkaufen(x,y);
+                return new Object[]{BenutzerAktion.PFLANZE_VERKAUFT, verkaufswert};
             } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.GIESSKANNE) {
                 pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
-                return BenutzerAktion.GIESSEN;
+                return new Object[]{BenutzerAktion.GIESSEN};
             } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.DUENGER) {
                 pflanze.pflanzeWirdAngeklickt(ausgewaehltesWerkzeug);
-                return BenutzerAktion.DUENGEN;
+                return new Object[]{BenutzerAktion.DUENGEN};
             }
         }
-        // Wenn Topf leer ist
         else {
             if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.SAMEN){
-                neuePflanzeKaufen(x,y);
-                return BenutzerAktion.PFLANZE_GEKAUFT;
-            } else if (ausgewaehltesWerkzeug == AusgewaehltesWerkzeug.VERSCHIEBEN) {
-                pflanzeVerschieben(x,y);
-                return BenutzerAktion.PFLANZE_VERSCHOBEN;
+                int kosten = neuePflanzeKaufen(x,y);
+                if (kosten > 0) {
+                    return new Object[]{BenutzerAktion.PFLANZE_GEKAUFT, kosten};
+                }
             }
         }
         return null;
@@ -67,21 +76,17 @@ public class Garten {
 
     /**
      * Verschiebt eine Pflanze von einem Topf in einen anderen.
-     * Wenn keine Pflanze in der Hand ist, wird die ausgewählte Pflanze in die Hand genommen.
-     * Wenn eine Pflanze in der Hand ist, wird diese in den ausgewählten leeren Topf gesetzt.
      * @param x Spalte des angeklickten Topfes.
      * @param y Zeile des angeklickten Topfes.
      * @author Jasper Groetzner
      */
     private void pflanzeVerschieben(int x, int y) {
         if (pflanzeInDerHand == null) {
-            // Nehmen eine Pflanze in die Hand
             if (pflanzen[x][y] != null) {
                 pflanzeInDerHand = pflanzen[x][y];
                 pflanzen[x][y] = null;
             }
         } else {
-            // Setzen eine Pflanze aus der Hand
             if (pflanzen[x][y] == null) {
                 pflanzen[x][y] = pflanzeInDerHand;
                 pflanzeInDerHand = null;
@@ -90,105 +95,67 @@ public class Garten {
     }
 
     /**
-     * Pflanzt bei ausreichendem Geld eine neue Pflanze im ausgewählten Topf.
+     * Pflanzt bei ausreichendem Geld eine neue Pflanze im ausgewählten Topf und gibt die Kosten zurück.
      * @param x Spalte in der sich die Pflanze im Garten befindet.
      * @param y Zeile in der sich die Pflanze im Garten befindet.
-     * @author Erik Dörenkämper
+     * @return Kosten der Pflanze oder 0 wenn nicht erfolgreich.
+     * @author Erik Dörenkämper, Jasper Groetzner
      */
-    private void neuePflanzeKaufen(int x,int y){
+    private int neuePflanzeKaufen(int x,int y){
         if (geld >= 100) {
             pflanzen[x][y] = new Pflanze();
             geld -= 100;
+            return 100;
         }
+        return 0;
     }
 
-
     /**
-     * Entfernt die Pflanze auf dem ausgewählten Topf und erhöht das Geld um den Wert der Pflanze.
+     * Entfernt die Pflanze und gibt ihren Wert zurück.
      * @param x Spalte in der sich die Pflanze im Garten befindet.
      * @param y Zeile in der sich die Pflanze im Garten befindet.
+     * @return Der Wert der verkauften Pflanze.
      * @author Erik Dörenkämper
      */
-    private void pflanzeVerkaufen(int x,int y){
-        geld += pflanzen[x][y].berechneWertDerPflanze();
+    private int pflanzeVerkaufen(int x,int y){
+        int verkaufswert = pflanzen[x][y].berechneWertDerPflanze();
+        geld += verkaufswert;
         pflanzen[x][y]  = null;
+        return verkaufswert;
     }
 
 
     // getter und setter
-    /**
-     * Getter für eine Pflanze im Garten.
-     * @param x Spalte in der sich die Pflanze im Garten befindet.
-     * @param y Zeile in der sich die Pflanze im Garten befindet.
-     * @return Pflanze an der Position x und y
-     * @author Erik Dörenkämper
-     */
     public Pflanze getPflanze(int x, int y){
         return pflanzen[x][y];
     }
 
-    /**
-     * Setter für eine Pflanze im Garten.
-     * @param x Spalte in der sich die Pflanze im Garten befindet.
-     * @param y Zeile in der sich die Pflanze im Garten befindet.
-     * @param pflanze Pflanze die gesetzt werden soll.
-     * @author Erik Dörenkämper
-     */
     public void setPflanze(int x, int y, Pflanze pflanze){
         this.pflanzen[x][y] = pflanze;
     }
 
-    /**
-     * Getter für das Geld des Spielers.
-     * @return Geld des Spielers.
-     * @author Erik Dörenkämper
-     */
     public int getGeld() {
         return geld;
     }
 
-    /**
-     * Setter für das Geld des Spielers.
-     * @param geld Neuer Geldwert.
-     * @author Erik Dörenkämper
-     */
     public void setGeld(int geld) {
         this.geld = geld;
     }
 
-    /**
-     * Geld des Spielers wird um den übergebenen Betrag verändert.
-     * @param geld Betrag um den das Geld verändert werden soll.
-     * @author Erik Dörenkämper
-     */
     public void bucheGeld(int geld){
         this.geld += geld;
     }
 
-    /**
-     * Getter für das zur Laufzeit aktuell ausgewählte Werkzeug.
-     * @return Das zur Laufzeit aktuell ausgewählte Werkzeug.
-     * @author Erik Dörenkämper
-     */
     public AusgewaehltesWerkzeug getWerkzeug() {
         return ausgewaehltesWerkzeug;
     }
 
-    /**
-     * Setter für das zur Laufzeit aktuell ausgewählte Werkzeug.
-     * @param ausgewaehltesWerkzeug Das neue zur Laufzeit aktuell ausgewählte Werkzeug.
-     * @author Erik Dörenkämper
-     */
     public void setWerkzeug(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         if(pflanzeInDerHand == null) {
             this.ausgewaehltesWerkzeug = ausgewaehltesWerkzeug;
         }
     }
 
-    /**
-     * Getter für die Pflanze in der Hand.
-     * @return Die Pflanze in der Hand.
-     */
     public Pflanze getPflanzeInDerHand() {
         return pflanzeInDerHand;
     }

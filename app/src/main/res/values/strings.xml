@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ZenGarden</string>
     <string name="dollar">%1$d$</string>
+    <string name="dollar_minus">-%1$d$</string>
 </resources>

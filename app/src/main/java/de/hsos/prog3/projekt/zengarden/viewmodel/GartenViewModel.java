@@ -13,7 +13,6 @@ import com.squareup.moshi.Moshi;
 import java.io.IOException;
 
 import de.hsos.prog3.projekt.zengarden.model.AusgewaehltesWerkzeug;
-import de.hsos.prog3.projekt.zengarden.model.BenutzerAktion;
 import de.hsos.prog3.projekt.zengarden.model.Garten;
 import de.hsos.prog3.projekt.zengarden.model.Pflanze;
 
@@ -48,7 +47,6 @@ public class GartenViewModel extends ViewModel {
     private final MutableLiveData<Garten> gartenLiveData = new MutableLiveData<>();
 
     private final MutableLiveData<Object[]> benutzerAktion = new MutableLiveData<>();
-
 
     /**
      * <p>Initialisiert das ViewModel.<br>
@@ -109,18 +107,32 @@ public class GartenViewModel extends ViewModel {
 
 
     /**
-     * Leitet den Klick auf einen Topf an das Model weiter. Außerdem wird hier der Garten gespeichert.
-     * @param x Spalte in der sich die Pflanze im Garten befindet.
-     * @param y Zeile in der sich die Pflanze im Garten befindet.
-     * @author Erik Dörenkämper
+     * Verarbeitet einen Klick auf einen Topf im Garten.
+     *
+     * Diese Methode delegiert die Klick-Logik an das Garten-Modell. Abhängig von der
+     * ausgeführten Aktion (z.B. pflanzen, gießen) wird ein entsprechendes Event für die View
+     * ausgelöst. Anschließend wird der Garten gespeichert und die LiveData-Objekte werden
+     * aktualisiert, um die UI auf den neuesten Stand zu bringen.
+     *
+     * @param x Die x-Koordinate (Spalte) des angeklickten Topfes.
+     * @param y Die y-Koordinate (Zeile) des angeklickten Topfes.
+     * @author Erik Dörenkämper, Jasper Groetzner
      */
     public void topfWirdAngeklickt(int x, int y){
-        BenutzerAktion aktion = garten.topfWirdAngeklickt(x,y);
-        if(aktion != null) {
-            benutzerAktion.setValue(new Object[]{aktion, x, y});
+        Object[] aktionResult = garten.topfWirdAngeklickt(x, y);
+        if (aktionResult != null) {
+            Object[] viewEvent;
+            if (aktionResult.length > 1) {
+                // Aktion mit Zusatzdaten (z.B. PFLANZE_VERKAUFT)
+                viewEvent = new Object[]{aktionResult[0], x, y, aktionResult[1]};
+            } else {
+                // Aktion ohne Zusatzdaten
+                viewEvent = new Object[]{aktionResult[0], x, y};
+            }
+            benutzerAktion.setValue(viewEvent);
         }
         gartenAktualisieren();
-        gartenSpeichern(gartenSharedPreferences); // bei jeder Änderung des Gartens wird gespeichert
+        gartenSpeichern(gartenSharedPreferences);
     }
 
 
