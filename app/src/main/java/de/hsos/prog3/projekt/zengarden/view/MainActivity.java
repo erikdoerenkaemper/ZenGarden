@@ -1,7 +1,6 @@
 package de.hsos.prog3.projekt.zengarden.view;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         gartenViewModel.getGartenLiveData().observe(this, this::gartenDarstellen);
-        gartenViewModel.getBenutzerAktion().observe(this, aktionData -> {
+        gartenViewModel.getBenutzerAktionLiveData().observe(this, aktionData -> {
             if (aktionData != null) {
                 BenutzerAktion aktion = (BenutzerAktion) aktionData[0];
                 int x = (int) aktionData[1];

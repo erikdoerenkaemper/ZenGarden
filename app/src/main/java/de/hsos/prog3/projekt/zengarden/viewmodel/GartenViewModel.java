@@ -46,7 +46,7 @@ public class GartenViewModel extends ViewModel {
      */
     private final MutableLiveData<Garten> gartenLiveData = new MutableLiveData<>();
 
-    private final MutableLiveData<Object[]> benutzerAktion = new MutableLiveData<>();
+    private final MutableLiveData<Object[]> benutzerAktionLiveData = new MutableLiveData<>();
 
     /**
      * <p>Initialisiert das ViewModel.<br>
@@ -89,8 +89,12 @@ public class GartenViewModel extends ViewModel {
         return gartenLiveData;
     }
 
-    public LiveData<Object[]> getBenutzerAktion() {
-        return benutzerAktion;
+    /**
+     * @return LiveData, das ein Object[]-Array mit Aktionsdetails enthält.
+     * @author Erik Dörenkämper, Jasper Groetzner
+     */
+    public LiveData<Object[]> getBenutzerAktionLiveData() {
+        return benutzerAktionLiveData;
     }
 
 
@@ -123,13 +127,13 @@ public class GartenViewModel extends ViewModel {
         if (aktionResult != null) {
             Object[] viewEvent;
             if (aktionResult.length > 1) {
-                // Aktion mit Zusatzdaten (z.B. PFLANZE_VERKAUFT)
+                // Aktion mit Zusatzdaten
                 viewEvent = new Object[]{aktionResult[0], x, y, aktionResult[1]};
             } else {
                 // Aktion ohne Zusatzdaten
                 viewEvent = new Object[]{aktionResult[0], x, y};
             }
-            benutzerAktion.setValue(viewEvent);
+            benutzerAktionLiveData.setValue(viewEvent);
         }
         gartenAktualisieren();
         gartenSpeichern(gartenSharedPreferences);

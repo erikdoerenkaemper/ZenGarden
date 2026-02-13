@@ -11,9 +11,9 @@ public class Pflanze {
     private PflanzenEvent naechstesPflanzenEvent;
     private long zeitpunktDesNaechstenEvents;
 
-    private static final int WACHSTUM_KEIMLING_WERT = 10;
-    private static final int WACHSTUM_SAEMLING_WERT = 20;
-    private static final int WACHSTUM_KLEIN_WERT = 50;
+    private static final int WACHSTUM_KEIMLING_BELOHNUNG = 10;
+    private static final int WACHSTUM_SAEMLING_BELOHNUNG = 20;
+    private static final int WACHSTUM_KLEIN_BELOHNUNG = 50;
 
     /**
      * Konstruktor für eine Pflanze.
@@ -85,30 +85,30 @@ public class Pflanze {
      * @author Erik Dörenkämper
      */
     private int wachsen(){
-        int geld = 0;
+        int belohnung = 0;
         switch (wachstumsphase){
             case KEIMLING:
                 zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
                 naechstesPflanzenEvent = zufaelligesPflanzenEvent();
                 wachstumsphase = Wachstumsphase.SAEMLING;
-                geld = WACHSTUM_KEIMLING_WERT;
+                belohnung = WACHSTUM_KEIMLING_BELOHNUNG;
                 break;
             case SAEMLING:
                 zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
                 naechstesPflanzenEvent = zufaelligesPflanzenEvent();
                 wachstumsphase = Wachstumsphase.KLEIN;
-                geld = WACHSTUM_SAEMLING_WERT;
+                belohnung = WACHSTUM_SAEMLING_BELOHNUNG;
                 break;
             case KLEIN:
                 wachstumsphase = Wachstumsphase.AUSGEWACHSEN;
                 naechstesPflanzenEvent = null;
                 zeitpunktDesNaechstenEvents = 0;
-                geld = WACHSTUM_KLEIN_WERT;
+                belohnung = WACHSTUM_KLEIN_BELOHNUNG;
                 break;
             default: break;
         }
         aktuellesEvent = null;
-        return geld;
+        return belohnung;
     }
 
 

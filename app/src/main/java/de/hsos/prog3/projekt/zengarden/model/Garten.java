@@ -48,7 +48,7 @@ public class Garten {
                     return new Object[]{BenutzerAktion.PFLANZE_WIEDEREINGEPFLANZT};
                 }
             }
-            return null; // No valid move action
+            return null;
         }
 
         if (pflanze != null){
