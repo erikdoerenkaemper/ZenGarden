@@ -1,7 +1,6 @@
 package de.hsos.prog3.projekt.zengarden.viewmodel;
+
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -11,6 +10,9 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import de.hsos.prog3.projekt.zengarden.model.AusgewaehltesWerkzeug;
 import de.hsos.prog3.projekt.zengarden.model.Garten;
@@ -30,9 +32,9 @@ public class GartenViewModel extends ViewModel {
      */
     SharedPreferences gartenSharedPreferences;
     /**
-     * Handler für periodisches Prüfen aller Pflanzen auf Events.
+     * ExecutorService für periodisches Prüfen aller Pflanzen auf Events.
      */
-    Handler handler = new Handler(Looper.getMainLooper());
+    private ScheduledExecutorService scheduler;
     /**
      * LiveData für das Geld
      */
@@ -51,7 +53,7 @@ public class GartenViewModel extends ViewModel {
     /**
      * <p>Initialisiert das ViewModel.<br>
      * 1. Gartenobjekt wird geladen.<br>
-     * 2. Handler für das periodische Prüfen aller Pflanzen auf Events wird gestartet.<br>
+     * 2. ExecutorService für das periodische Prüfen aller Pflanzen auf Events wird gestartet.<br>
      * 3. LiveDatas werden gesetzt.</p>
      *
      * @author Erik Dörenkämper
@@ -62,13 +64,22 @@ public class GartenViewModel extends ViewModel {
         this.gartenSharedPreferences = sharedPreferences;
         garten = gartenLaden(this.gartenSharedPreferences);
 
-        // Handler für periodisches Ausführen der Methode allePflanzenpruefen()
-        handler.post(runnableAllePflanzenpruefen);
+        // scheduler für periodisches Ausführen der Methode allePflanzenpruefen()
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(this::allePflanzenPruefen, 0, 1, TimeUnit.SECONDS);
 
         // LiveData setzen
         geldLiveData.setValue(garten.getGeld());
         ausgewaehltesWerkzeugMutableLiveData.setValue(garten.getWerkzeug());
         gartenLiveData.setValue(garten);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        if (scheduler != null) {
+            scheduler.shutdown();
+        }
     }
 
 
@@ -79,6 +90,14 @@ public class GartenViewModel extends ViewModel {
      */
     public LiveData<AusgewaehltesWerkzeug> getWerkzeug() {
         return ausgewaehltesWerkzeugMutableLiveData;
+    }
+
+    /**
+     * @return LiveData für das Geld
+     * @author Erik Dörenkämper
+     */
+    public LiveData<Integer> getGeldLiveData() {
+        return geldLiveData;
     }
 
     /**
@@ -147,23 +166,8 @@ public class GartenViewModel extends ViewModel {
      * @author Erik Dörenkämper
      */
     private void gartenAktualisieren(){
-        gartenLiveData.setValue(garten);
+        gartenLiveData.postValue(garten);
     }
-
-
-
-    // periodisches Ausführen der Methode allePflanzenPruefen()
-    /**
-     * Runnable für das periodische Ausführen der Methode allePflanzenPruefen().
-     */
-    // TODO prüfen ob man den Handler auch in einen anderen Thread auslagern kann.
-    Runnable runnableAllePflanzenpruefen = new Runnable() {
-        @Override
-        public void run() {
-            allePflanzenPruefen();
-            handler.postDelayed(this, 1000);
-        }
-    };
 
     /**
      * Überprüft alle Pflanzen im Garten auf Events.
@@ -190,6 +194,7 @@ public class GartenViewModel extends ViewModel {
         }
         if (eventWurdeGetriggert) {
             garten.bucheGeld(geld);
+            geldLiveData.postValue(garten.getGeld());
             gartenAktualisieren();
         }
     }

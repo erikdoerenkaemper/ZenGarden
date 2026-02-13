@@ -43,7 +43,7 @@
             android:id="@+id/verkaufen_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:text="$"
+            android:foreground="@drawable/verkaufen"
             android:textSize="20sp"/>
 
         <Button

@@ -8,7 +8,7 @@ public class Garten {
     /**
      * Geld des Spielers.
      */
-    int geld = 1000;
+    int geld = 200;
 
     /**
      * Array welches die Pflanzen des Gartens hält.
