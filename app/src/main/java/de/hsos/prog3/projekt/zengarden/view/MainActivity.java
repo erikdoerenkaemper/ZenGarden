@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        TextView geldButton = findViewById(R.id.geld_button);
+        TextView geldButton = findViewById(R.id.geld_anzeige);
         geldButton.setText(getString(R.string.dollar, garten.getGeld()));
     }
 

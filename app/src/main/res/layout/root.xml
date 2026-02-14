@@ -54,13 +54,13 @@
     </LinearLayout>
 
     <GridLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/gartengrid"
         android:rowCount="3"
         android:columnCount="6"
         app:layout_constraintStart_toEndOf="@id/buttons"
-        app:layout_constraintEnd_toStartOf="@id/geld_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:clipChildren="false"
@@ -68,16 +68,19 @@
     </GridLayout>
 
     <TextView
-        android:id="@+id/geld_button"
+        android:id="@+id/geld_anzeige"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:textSize="30sp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/geld_background"
+        android:gravity="center"
+        android:minWidth="120dp"
         android:padding="12dp"
-        android:textColor="@android:color/holo_green_dark"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/geld_gruen"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:minWidth="150dp"
-        android:gravity="end"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
