@@ -10,7 +10,9 @@ public class Pflanze {
     private PflanzenEvent aktuellesEvent;
     private PflanzenEvent naechstesPflanzenEvent;
     private long zeitpunktDesNaechstenEvents;
-
+    /**
+     * Konstante Werte für die Belohnung bei Wachstum.
+     */
     private static final int WACHSTUM_KEIMLING_BELOHNUNG = 10;
     private static final int WACHSTUM_SAEMLING_BELOHNUNG = 20;
     private static final int WACHSTUM_KLEIN_BELOHNUNG = 50;
@@ -72,6 +74,10 @@ public class Pflanze {
     }
 
 
+    /**
+     * Erfüllt das aktuelle Bedürfnis der Pflanze und setzt den Zustand für das nächste zufällige Event zurück.
+     * @author Erik Dörenkämper
+     */
     private void beduerfnisErfuellen() {
         zeitpunktDesNaechstenEvents = zufaelligeWartezeit();
         naechstesPflanzenEvent = zufaelligesPflanzenEvent();

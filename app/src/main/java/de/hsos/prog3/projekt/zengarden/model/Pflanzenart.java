@@ -2,7 +2,7 @@ package de.hsos.prog3.projekt.zengarden.model;
 
 /**
  * Enum der unterschiedlichen Pflanzenarten.
- * @author Erik Dörenkämper
+ * @author Erik Dörenkämper, Jasper Groetzner
  */
 public enum Pflanzenart {
     SONNENBLUME(1.0f),

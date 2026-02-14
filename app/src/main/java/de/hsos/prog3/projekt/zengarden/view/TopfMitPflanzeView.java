@@ -16,14 +16,41 @@ import de.hsos.prog3.projekt.zengarden.model.AusgewaehltesWerkzeug;
 import de.hsos.prog3.projekt.zengarden.model.Pflanze;
 import de.hsos.prog3.projekt.zengarden.model.PflanzenEvent;
 
+/**
+ * Stellt einen Blumentopf mit einer Pflanze dar.
+ *
+ * Diese View ist für die visuelle Darstellung eines Topfes im Zen-Garten zuständig.
+ * Sie zeigt den Zustand des Topfes an, also ob er leer ist oder eine Pflanze enthält.
+ * Ist eine Pflanze vorhanden, werden ihre Art, Wachstumsphase und aktuelle Bedürfnisse
+ * (z. B. Wasser oder Dünger) durch entsprechende Bilder visualisiert.
+ * @author Jasper Groetzner, Erik
+ * @author Jasper Groetzner, Erik Döremkämper
+ */
 public class TopfMitPflanzeView extends FrameLayout {
 
+    /**
+     * ImageView zur Anzeige des Pflanzenbildes.
+     */
     private ImageView pflanzeImageView;
+
+    /**
+     * ImageView zur Anzeige des aktuellen Bedürfnisses der Pflanze.
+     */
     private ImageView beduerfnissImageView;
+    /**
+     * Konstanten für die Transparenz.
+     */
 
     private static final float DIMMED_ALPHA = 0.7f;
     private static final float NORMAL_ALPHA = 1.0f;
 
+    /**
+     * Konstruktor für die programmatische Erstellung der View.
+     *
+     * @param context      Der Kontext, in dem die View ausgeführt wird.
+     * @param attrs        Attribute aus dem XML-Layout.
+     * @param defStyleAttr Ein Attribut im aktuellen Theme, das eine Referenz auf einen Stil für diese View enthält.
+     */
     public TopfMitPflanzeView(@NonNull Context context) {
         super(context);
         init(context);
@@ -101,6 +128,7 @@ public class TopfMitPflanzeView extends FrameLayout {
      *
      * @param pflanze Das Pflanze-Objekt in dieser View, kann null sein, wenn der Topf leer ist.
      * @param ausgewaehltesWerkzeug Das aktuell vom Benutzer ausgewählte Werkzeug.
+     * @author jasper groetzner
      */
     private void pflanzenHervorhebung(Pflanze pflanze, AusgewaehltesWerkzeug ausgewaehltesWerkzeug) {
         boolean highlight;
@@ -131,6 +159,16 @@ public class TopfMitPflanzeView extends FrameLayout {
         setAlpha(highlight ? NORMAL_ALPHA : DIMMED_ALPHA);
     }
 
+    /**
+     * Stellt das aktuelle Bedürfnis der Pflanze (z.B. Gießen oder Düngen) visuell dar.
+     * Abhängig vom PflanzenEvent, das von der Pflanze zurückgegeben wird,
+     * wird ein entsprechendes Icon (z.B. Wassertropfen oder Düngersack) über der Pflanze angezeigt.
+     * Wenn kein aktuelles Ereignis ansteht (d.h. die Pflanze hat keine Bedürfnisse),
+     * wird das Bedürfnis-Icon ausgeblendet.
+     *
+     * @param pflanze Das Pflanzenobjekt, dessen aktuelles Ereignis dargestellt werden soll.
+     * @author Jasper Groetzner
+     */
     private void aktuellesEventDarstellen(Pflanze pflanze) {
         PflanzenEvent aktuellesEvent = pflanze.getAktuellesEvent();
         if (aktuellesEvent == null) {

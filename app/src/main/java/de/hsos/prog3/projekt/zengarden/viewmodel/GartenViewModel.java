@@ -20,7 +20,7 @@ import de.hsos.prog3.projekt.zengarden.model.Pflanze;
 
 /**
  * ViewModel des ZenGarden.
- * @author Erik Dörenkämper
+ * @author Erik Dörenkämper, Jasper Groetzner
  */
 public class GartenViewModel extends ViewModel {
     /**
@@ -47,14 +47,16 @@ public class GartenViewModel extends ViewModel {
      * LiveData für den gesamten Garten.
      */
     private final MutableLiveData<Garten> gartenLiveData = new MutableLiveData<>();
-
+    /**
+     * LiveData für die Benutzeraktion
+     */
     private final MutableLiveData<Object[]> benutzerAktionLiveData = new MutableLiveData<>();
 
     /**
-     * <p>Initialisiert das ViewModel.<br>
-     * 1. Gartenobjekt wird geladen.<br>
-     * 2. ExecutorService für das periodische Prüfen aller Pflanzen auf Events wird gestartet.<br>
-     * 3. LiveDatas werden gesetzt.</p>
+     * Initialisiert das ViewModel.
+     * 1. Gartenobjekt wird geladen.
+     * 2. ExecutorService für das periodische Prüfen aller Pflanzen auf Events wird gestartet.
+     * 3. LiveDatas werden gesetzt.
      *
      * @author Erik Dörenkämper
      * @param sharedPreferences SharedPreference Objekt für die Persistierung des Gartens.
@@ -74,6 +76,14 @@ public class GartenViewModel extends ViewModel {
         gartenLiveData.setValue(garten);
     }
 
+    /**
+     * Diese Methode wird aufgerufen, wenn das ViewModel zerstört wird. Sie sorgt für das ordnungsgemäße Aufräumen von
+     * Ressourcen. Insbesondere wird der executoservice, der für die periodische
+     * Überprüfung der Pflanzen zuständig ist, sicher heruntergefahren, um Memory-Leaks und
+     * unnötige Hintergrundprozesse zu vermeiden.
+     *
+     * @author Jasper Groetzner
+     */
     @Override
     protected void onCleared() {
         super.onCleared();
@@ -110,7 +120,7 @@ public class GartenViewModel extends ViewModel {
 
     /**
      * @return LiveData, das ein Object[]-Array mit Aktionsdetails enthält.
-     * @author Erik Dörenkämper, Jasper Groetzner
+     * @author Jasper Groetzner
      */
     public LiveData<Object[]> getBenutzerAktionLiveData() {
         return benutzerAktionLiveData;
@@ -120,7 +130,7 @@ public class GartenViewModel extends ViewModel {
     // Deligierungen ans Model
     /**
      * Leitet den Klick auf eines der Werkzeuge an as Model weiter.
-     * @author Erik Dörenkämper
+     * @author Erik Dörenkämper, Jasper Groetzner
      * @param ausgewaehltesWerkzeug Werkzeug das angeklickt wurde.
      */
     public void setWerkzeug(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
@@ -158,9 +168,6 @@ public class GartenViewModel extends ViewModel {
         gartenSpeichern(gartenSharedPreferences);
     }
 
-
-
-    // Garten erneut ins LiveData setzen, damit LiveData aktiv wird
     /**
      * Setzt erneut den Garten in das LiveData Objekt, damit LiveData aktiv wird.
      * @author Erik Dörenkämper
@@ -201,7 +208,7 @@ public class GartenViewModel extends ViewModel {
 
 
 
-    // Speichern und Laden des Gartens
+
     /**
      * Laden des Gartens aus dem SharedPreferences.
      * @param sharedPreferences SharedPreference Objekt für den Garten.

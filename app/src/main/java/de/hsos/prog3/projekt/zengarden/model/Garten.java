@@ -125,37 +125,82 @@ public class Garten {
     }
 
 
-    // getter und setter
+    /**
+     * Gibt eine Pflanze an einer bestimmten Stelle im Garten zurück.
+     * @param x Die Spalte der Pflanze im Garten.
+     * @param y Die Zeile der Pflanze im Garten.
+     * @return Das Pflanzenobjekt an der angegebenen Position oder null, wenn dort keine Pflanze ist.
+     */
     public Pflanze getPflanze(int x, int y){
         return pflanzen[x][y];
     }
 
+    /**
+     * Setzt eine Pflanze an eine bestimmte Position im Garten.
+     * @param x Die Spalte (x-Koordinate) im Garten, an der die Pflanze platziert werden soll.
+     * @param y Die Zeile (y-Koordinate) im Garten, an der die Pflanze platziert werden soll.
+     * @param pflanze Die Pflanze, die an der angegebenen Position gesetzt werden soll.
+     * @author Erik Dörenkämper
+     */
     public void setPflanze(int x, int y, Pflanze pflanze){
         this.pflanzen[x][y] = pflanze;
     }
 
+    /**
+     * Gibt das aktuelle Geld des Spielers zurück.
+     * @return Geld des Spielers.
+     * @author Erik Dörenkämper
+     */
     public int getGeld() {
         return geld;
     }
 
+    /**
+     * Setzt das Geld des Spielers auf einen bestimmten Wert.
+     * @param geld der neue Geldwert.
+     * @author Erik Dörenkämper
+     */
     public void setGeld(int geld) {
         this.geld = geld;
     }
 
+    /**
+     * Bucht einen Geldbetrag auf das Konto des Spielers.
+     * Kann für positive und negative Beträge verwendet werden.
+     * @param geld Der zu buchende Betrag.
+     * @author Erik Dörenkämper
+     */
     public void bucheGeld(int geld){
         this.geld += geld;
     }
 
+    /**
+     * Gibt das aktuell ausgewählte Werkzeug zurück.
+     * @return das ausgewählte Werkzeug.
+     * @author Erik Dörenkämper
+     */
     public AusgewaehltesWerkzeug getWerkzeug() {
         return ausgewaehltesWerkzeug;
     }
 
+    /**
+     * Setzt das aktuell ausgewählte Werkzeug.
+     * Das Werkzeug kann nur geändert werden, wenn keine Pflanze in der Hand gehalten wird.
+     * @param ausgewaehltesWerkzeug Das zu setzende Werkzeug.
+     * @author Jasper Groetzner
+     */
     public void setWerkzeug(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         if(pflanzeInDerHand == null) {
             this.ausgewaehltesWerkzeug = ausgewaehltesWerkzeug;
         }
     }
 
+    /**
+     * Gibt die Pflanze zurück, die der Spieler aktuell in der Hand hält (beim Verschieben).
+     *
+     * @return Die Pflanze in der Hand oder null, wenn keine Pflanze gehalten wird.
+     * @author Erik Dörenkämper
+     */
     public Pflanze getPflanzeInDerHand() {
         return pflanzeInDerHand;
     }
