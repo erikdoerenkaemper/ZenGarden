@@ -42,7 +42,7 @@ public class GartenViewModel extends ViewModel {
     /**
      * LiveData für das zur Laufzeit aktuell ausgewählte Werkzeug.
      */
-    private final MutableLiveData<AusgewaehltesWerkzeug> ausgewaehltesWerkzeugMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<AusgewaehltesWerkzeug> ausgewaehltesWerkzeugLiveData = new MutableLiveData<>();
     /**
      * LiveData für den gesamten Garten.
      */
@@ -72,7 +72,7 @@ public class GartenViewModel extends ViewModel {
 
         // LiveData setzen
         geldLiveData.setValue(garten.getGeld());
-        ausgewaehltesWerkzeugMutableLiveData.setValue(garten.getWerkzeug());
+        ausgewaehltesWerkzeugLiveData.setValue(garten.getWerkzeug());
         gartenLiveData.setValue(garten);
     }
 
@@ -99,7 +99,7 @@ public class GartenViewModel extends ViewModel {
      * @return LiveData für das zur Laufzeit aktuell ausgewählte Werkzeug.
      */
     public LiveData<AusgewaehltesWerkzeug> getWerkzeug() {
-        return ausgewaehltesWerkzeugMutableLiveData;
+        return ausgewaehltesWerkzeugLiveData;
     }
 
     /**
@@ -127,7 +127,7 @@ public class GartenViewModel extends ViewModel {
      */
     public void setWerkzeug(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
         garten.setWerkzeug(ausgewaehltesWerkzeug);
-        ausgewaehltesWerkzeugMutableLiveData.setValue(ausgewaehltesWerkzeug);
+        ausgewaehltesWerkzeugLiveData.setValue(ausgewaehltesWerkzeug);
     }
 
 
