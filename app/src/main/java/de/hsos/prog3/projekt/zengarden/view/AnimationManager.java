@@ -1,6 +1,7 @@
 package de.hsos.prog3.projekt.zengarden.view;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -87,14 +88,19 @@ public class AnimationManager {
         TextView preisAnzeige = topfMitPflanze.findViewById(R.id.preis_anzeige);
         Animation animation;
         View viewFuerAnimation;
+        MediaPlayer mp;
 
         switch (aktion) {
             case GIESSEN:
+                mp = MediaPlayer.create(context, R.raw.wassersound);
+                mp.start();
                 animation = AnimationUtils.loadAnimation(context, R.anim.drehen);
                 animationsIcon.setImageResource(R.drawable.giesskanne);
                 viewFuerAnimation = animationsIcon;
                 break;
             case DUENGEN:
+                mp = MediaPlayer.create(context, R.raw.duengersound);
+                mp.start();
                 animation = AnimationUtils.loadAnimation(context, R.anim.schuetteln);
                 animationsIcon.setImageResource(R.drawable.duenger);
                 viewFuerAnimation = animationsIcon;
