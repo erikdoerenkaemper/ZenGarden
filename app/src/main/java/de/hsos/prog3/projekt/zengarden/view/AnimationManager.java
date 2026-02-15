@@ -49,6 +49,7 @@ public class AnimationManager {
      *
      * @param context    Der Anwendungskontext, der zum Laden von Animationen und Ressourcen benötigt wird.
      * @param gartengrid Das GridLayout, das den Garten darstellt und in dem die Animationen abgespielt werden sollen.
+     * @author Jasper Groetzner
      */
     public AnimationManager(Context context, GridLayout gartengrid) {
         this.context = context;
@@ -63,6 +64,7 @@ public class AnimationManager {
      *
      * @param pflanzeImageView Die ImageView der Pflanze, auf die die Animation angewendet werden soll.
      * @param start            true, um die Animation zu starten; false, um sie zu stoppen und zu entfernen.
+     * @author Jasper Groetzner
      */
     public void spielePflanzenAtmung(ImageView pflanzeImageView, boolean start) {
         if (start) {
@@ -87,6 +89,7 @@ public class AnimationManager {
      * @param y      Die y-Koordinate des Zielfeldes im Raster.
      * @param betrag Der Geldbetrag, der bei Kauf- oder Verkaufsaktionen angezeigt werden soll.
      *               Kann für andere Aktionen null sein.
+     * @author Jasper Groetzner
      */
     public void spieleBenutzerAktionAnimation(BenutzerAktion aktion, int x, int y, Integer betrag) {
         FrameLayout topfMitPflanze = gartengrid.findViewWithTag("x: " + x + " y: " + y);
@@ -152,6 +155,7 @@ public class AnimationManager {
      *
      * @param view      Die View, auf der die Animation abgespielt werden soll.
      * @param animation Die Animation, die gestartet werden soll.
+     * @author Jasper Groetzner
      */
     private void startAnimation(View view, Animation animation) {
         view.setVisibility(View.VISIBLE);
@@ -186,6 +190,7 @@ public class AnimationManager {
      * Verwaltet und steuert alle visuellen Animationen innerhalb der App.
      * Diese Klasse ist verantwortlich für das Starten und Stoppen von Animationen,
      * die auf Benutzeraktionen oder Spielzustandsänderungen reagieren.
+     * @author Jasper Groetzner
      */
     private static class HideViewOnAnimationEndListener implements Animation.AnimationListener {
         /**
@@ -212,6 +217,7 @@ public class AnimationManager {
          * Ansicht aus, nachdem die Animation abgeschlossen ist.
          *
          * @param animation Die Animation, die ihr Ende erreicht hat.
+         * @author Jasper Groetzner
          */
         @Override
         public void onAnimationEnd(Animation animation) {
