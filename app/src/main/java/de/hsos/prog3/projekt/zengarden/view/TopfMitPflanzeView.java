@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -46,20 +45,25 @@ public class TopfMitPflanzeView extends FrameLayout {
 
     /**
      * Konstruktor für die programmatische Erstellung der View.
-     *
      * @param context      Der Kontext, in dem die View ausgeführt wird.
-     * @param attrs        Attribute aus dem XML-Layout.
-     * @param defStyleAttr Ein Attribut im aktuellen Theme, das eine Referenz auf einen Stil für diese View enthält.
      */
     public TopfMitPflanzeView(@NonNull Context context) {
         super(context);
         init(context);
     }
 
+
+
+    /**
+     * Konstruktor für die programmatische Erstellung der View.
+     * @param context      Der Kontext, in dem die View ausgeführt wird.
+     * @param attrs        Attribute aus dem XML-Layout.
+     */
     public TopfMitPflanzeView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
+
 
     public TopfMitPflanzeView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -147,8 +151,6 @@ public class TopfMitPflanzeView extends FrameLayout {
                     highlight = pflanze == null;
                     break;
                 case VERSCHIEBEN:
-                    highlight = pflanze != null;
-                    break;
                 case VERKAUFEN:
                     highlight = pflanze != null;
                     break;

@@ -155,8 +155,7 @@ public class Pflanze {
 
 
     /**
-     * Generiert mit unterschiedlichen Wahrscheinlichkeiten eine zufällige Pflanzenart.
-     *
+     * Generiert mit unterschiedlichen Wahrscheinlichkeiten eine zufällige Pflanzenart.*
      *   Sonnenblume: 40%
      *   Gänseblümchen: 30%
      *   Rose: 15%

@@ -16,8 +16,7 @@ import de.hsos.prog3.projekt.zengarden.R;
 import de.hsos.prog3.projekt.zengarden.model.BenutzerAktion;
 
 /**
- * Verwaltet die Animationen, die in der Gartenansicht angezeigt werden.
- *
+ * Verwaltet die Animationen, die in der Gartenansicht angezeigt werden.*
  * Diese Klasse ist verantwortlich für das Starten und Stoppen von Animationen, die sich auf
  * Pflanzeninteraktionen und Benutzeraktionen innerhalb des Gartengitters beziehen. Sie behandelt
  * Animationen für das Gießen, Düngen, Kaufen, Verkaufen und Verschieben von Pflanzen sowie

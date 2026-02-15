@@ -184,16 +184,13 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Initialisiert die Observer für die LiveData-Objekte im ViewModel.
-     * Diese Methode ist zentral für die reaktive Aktualisierung der Benutzeroberfläche.
-     *
+     * Diese Methode ist zentral für die reaktive Aktualisierung der Benutzeroberfläche.*
      * 1. Werkzeug-Observer: Beobachtet Änderungen am ausgewählten Werkzeug.
      *    Bei einer Änderung werden die Werkzeug-Buttons (visuelle Hervorhebung) und der Garten
      *    (z.B. zur Darstellung von Interaktionsmöglichkeiten) neu gezeichnet.
-     *
      * 2. Garten-Observer: Beobachtet Änderungen am Zustand des Gartens.
      *    Bei jeder Änderung (z.B. Pflanzenwachstum, Gießen) wird die gesamte Gartenansicht
      *    aktualisiert, um den neuen Zustand darzustellen.
-     *
      * 3. BenutzerAktion-Observer: Beobachtet durchgeführte Benutzeraktionen (z.B. Gießen, Pflanzen).
      *    Bei einer Aktion wird eine entsprechende Animation über den AnimationManager
      *    an der jeweiligen Position im Garten ausgelöst.

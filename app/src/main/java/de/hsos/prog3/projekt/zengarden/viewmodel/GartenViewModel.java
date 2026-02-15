@@ -68,7 +68,7 @@ public class GartenViewModel extends ViewModel {
 
         // scheduler für periodisches Ausführen der Methode allePflanzenpruefen()
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(this::allePflanzenPruefen, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleWithFixedDelay(this::allePflanzenPruefen, 0, 1, TimeUnit.SECONDS);
 
         // LiveData setzen
         geldLiveData.setValue(garten.getGeld());
@@ -103,14 +103,6 @@ public class GartenViewModel extends ViewModel {
     }
 
     /**
-     * @return LiveData für das Geld
-     * @author Erik Dörenkämper
-     */
-    public LiveData<Integer> getGeldLiveData() {
-        return geldLiveData;
-    }
-
-    /**
      * @author Erik Dörenkämper
      * @return LiveData für den gesamten Garten.
      */
@@ -141,7 +133,6 @@ public class GartenViewModel extends ViewModel {
 
     /**
      * Verarbeitet einen Klick auf einen Topf im Garten.
-     *
      * Diese Methode delegiert die Klick-Logik an das Garten-Modell. Abhängig von der
      * ausgeführten Aktion (z.B. pflanzen, gießen) wird ein entsprechendes Event für die View
      * ausgelöst. Anschließend wird der Garten gespeichert und die LiveData-Objekte werden
