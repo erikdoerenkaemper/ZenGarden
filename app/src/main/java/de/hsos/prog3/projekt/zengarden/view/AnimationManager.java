@@ -36,6 +36,9 @@ public class AnimationManager {
      * Das GridLayout, das den Garten mit allen Töpfen darstellt.
      */
     private final GridLayout gartengrid;
+    /**
+     * Executor, der zum Abspielen von Sounds in einem eigenem Thread dient.
+     */
     private final Executor soundAbspielen = Executors.newSingleThreadExecutor();
 
 
@@ -93,7 +96,6 @@ public class AnimationManager {
         TextView preisAnzeige = topfMitPflanze.findViewById(R.id.preis_anzeige);
         Animation animation;
         View viewFuerAnimation;
-        MediaPlayer mp;
 
         switch (aktion) {
             case GIESSEN:
@@ -157,6 +159,10 @@ public class AnimationManager {
         view.startAnimation(animation);
     }
 
+    /**
+     * Spielt einen Wasser Sound in einem eigenem Thread aus.
+     * @author Erik Dörenkämper
+     */
     private void wassersoundAbspielen(){
         soundAbspielen.execute(() -> {
             MediaPlayer mp = MediaPlayer.create(context, R.raw.wassersound);
@@ -164,14 +170,16 @@ public class AnimationManager {
         });
     }
 
+    /**
+     * Spielt einen Dünger Sound in einem eigenem Thread aus.
+     * @author Erik Dörenkämper
+     */
     private void duengersoundAbspielen(){
         soundAbspielen.execute(() -> {
             MediaPlayer mp = MediaPlayer.create(context, R.raw.duengersound);
             mp.start();
         });
     }
-
-
 
 
     /**
