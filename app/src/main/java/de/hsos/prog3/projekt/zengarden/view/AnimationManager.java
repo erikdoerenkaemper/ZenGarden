@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import de.hsos.prog3.projekt.zengarden.R;
 import de.hsos.prog3.projekt.zengarden.model.BenutzerAktion;
 
@@ -33,6 +36,9 @@ public class AnimationManager {
      * Das GridLayout, das den Garten mit allen Töpfen darstellt.
      */
     private final GridLayout gartengrid;
+    private final Executor soundAbspielen = Executors.newSingleThreadExecutor();
+
+
 
     /**
      * Konstruktor für den AnimationManager.
@@ -91,15 +97,13 @@ public class AnimationManager {
 
         switch (aktion) {
             case GIESSEN:
-                mp = MediaPlayer.create(context, R.raw.wassersound);
-                mp.start();
+                wassersoundAbspielen();
                 animation = AnimationUtils.loadAnimation(context, R.anim.drehen);
                 animationsIcon.setImageResource(R.drawable.giesskanne);
                 viewFuerAnimation = animationsIcon;
                 break;
             case DUENGEN:
-                mp = MediaPlayer.create(context, R.raw.duengersound);
-                mp.start();
+                duengersoundAbspielen();
                 animation = AnimationUtils.loadAnimation(context, R.anim.schuetteln);
                 animationsIcon.setImageResource(R.drawable.duenger);
                 viewFuerAnimation = animationsIcon;
@@ -152,6 +156,23 @@ public class AnimationManager {
         animation.setAnimationListener(new HideViewOnAnimationEndListener(view));
         view.startAnimation(animation);
     }
+
+    private void wassersoundAbspielen(){
+        soundAbspielen.execute(() -> {
+            MediaPlayer mp = MediaPlayer.create(context, R.raw.wassersound);
+            mp.start();
+        });
+    }
+
+    private void duengersoundAbspielen(){
+        soundAbspielen.execute(() -> {
+            MediaPlayer mp = MediaPlayer.create(context, R.raw.duengersound);
+            mp.start();
+        });
+    }
+
+
+
 
     /**
      * Verwaltet und steuert alle visuellen Animationen innerhalb der App.
