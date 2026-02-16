@@ -1,16 +1,12 @@
 Programmieren:
 - Werkzeug Buttons richtig darstellen - FERTIG
-- Verschieben werkzeug - Fertig
-- Multithreading
-- soundeffekte
-- Animationen
-- (Buttons zu ImageButtons machen???)
-- mehr spielbarer Content
+- Verschieben werkzeug - FERTIG
+- Multithreading - FERTIG
+- soundeffekte - FERTIG
+- Animationen - FERTIG
 - Hintergrundbild einfügen - FERTIG
-- Aufsteller einfügen
-(Klasse/Methoden zum testen???)
 
 
 Algemeines zur Abgabe:
-- Eidesstattliche Erklärung
-- readme.md
+- Eidesstattliche Erklärung - FERTIG
+- readme.md - FERTIG
