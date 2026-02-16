@@ -6,6 +6,9 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import de.hsos.prog3.projekt.zengarden.R;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.root);
+        initDisplayForFullscreen();
 
         gartenViewModel = new ViewModelProvider(this).get(GartenViewModel.class);
         GridLayout gartengrid = findViewById(R.id.gartengrid);
@@ -52,6 +56,17 @@ public class MainActivity extends AppCompatActivity {
         initialisiereGrid();
         buttonListenersSetzen();
         observablesSetzen();
+    }
+
+    /**
+     * blendet die Systemleisten aus, sodass die App im Vollbild angezeigt wird.
+     * Wurde aus Vorlseungsfolien kopiert.
+     * @author Erik Dörenkämper
+     */
+    private void initDisplayForFullscreen(){ // aus Vorlseungsfolien kopiert
+        WindowInsetsControllerCompat windowInsetsController = WindowCompat.getInsetsController(this.getWindow(),this.getWindow().getDecorView());
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+        windowInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
     }
 
     /**
