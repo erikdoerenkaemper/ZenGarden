@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">ZenGarden</string>
+    <!-- Placeholder Ausdruck mit KI erstellt -->
     <string name="dollar">%1$d$</string>
     <string name="dollar_minus">-%1$d$</string>
 </resources>

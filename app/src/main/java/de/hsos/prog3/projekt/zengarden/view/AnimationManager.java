@@ -165,6 +165,7 @@ public class AnimationManager {
 
     /**
      * Spielt einen Wasser Sound in einem eigenem Thread aus.
+     * Quelle: <a href="https://www.youtube.com/watch?v=kCJV20KkS0g">Wassersound</a>
      * @author Erik Dörenkämper
      */
     private void wassersoundAbspielen(){
@@ -176,6 +177,7 @@ public class AnimationManager {
 
     /**
      * Spielt einen Dünger Sound in einem eigenem Thread aus.
+     * Quelle: <a href="https://www.youtube.com/watch?v=iJ9vBzGBxxY">Duengersound</a>
      * @author Erik Dörenkämper
      */
     private void duengersoundAbspielen(){

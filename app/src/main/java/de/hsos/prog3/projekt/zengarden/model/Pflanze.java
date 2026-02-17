@@ -35,24 +35,22 @@ public class Pflanze {
      * @param ausgewaehltesWerkzeug Beim Anklicken ausgewähltes Werkzeug.
      * @author Erik Dörenkämper
      */
-    public PflanzenEvent pflanzeWirdAngeklickt(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
-        if (ausgewaehltesWerkzeug == null){return null;}
+    public void pflanzeWirdAngeklickt(AusgewaehltesWerkzeug ausgewaehltesWerkzeug){
+        if (ausgewaehltesWerkzeug == null){return;}
         switch (ausgewaehltesWerkzeug){
             case GIESSKANNE:
                 if (aktuellesEvent == PflanzenEvent.GIESSEN){
                     beduerfnisErfuellen();
-                    return PflanzenEvent.GIESSEN;
                 }
                 break;
             case DUENGER:
                 if (aktuellesEvent == PflanzenEvent.DUENGEN){
                     beduerfnisErfuellen();
-                    return PflanzenEvent.DUENGEN;
                 }
                 break;
-            default: break;
+            default:
+                break;
         }
-        return null;
     }
 
     /**
@@ -148,7 +146,6 @@ public class Pflanze {
         } else {
             zufaelligesPflanzenEvent = PflanzenEvent.WACHSTUM;
         }
-
         return zufaelligesPflanzenEvent;
     }
 
@@ -168,7 +165,6 @@ public class Pflanze {
      */
     private Pflanzenart zufaelligePflanzenart(){
         int zufall = (int) (Math.random() * 100);
-
 
         if (zufall < 40) { // 0-39 (40%)
             return Pflanzenart.SONNENBLUME;
